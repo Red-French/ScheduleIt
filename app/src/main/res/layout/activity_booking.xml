@@ -13,34 +13,16 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp"
-        android:text="Welcome"/>
+        android:layout_marginTop="10dp"
+        android:text="Click a date and time, then confirm"
+        android:textSize="18sp"/>
 
-    <TextView
-        android:id="@+id/textView2"
+    <CalendarView
+        android:id="@+id/calendarView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1. Click a data to see available times."
-        android:layout_marginTop="14dp"
         android:layout_below="@+id/tvWelcome"
-        android:layout_centerHorizontal="true"/>
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="2. Click time you wish to book."
-        android:layout_below="@+id/textView2"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_alignStart="@+id/textView2"/>
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="3. Click 'Confirm."
-        android:layout_below="@+id/textView3"
-        android:layout_alignLeft="@+id/textView3"
-        android:layout_alignStart="@+id/textView3"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11dp"/>
 
 </RelativeLayout>
