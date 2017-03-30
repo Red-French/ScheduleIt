@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.CalendarView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class BookingActivity extends AppCompatActivity {
 
@@ -22,5 +23,15 @@ public class BookingActivity extends AppCompatActivity {
 
         String message = name + ", welcome to the booking area.";
         welcomeMsg.setText(message);
+
+        calendar = (CalendarView) findViewById(R.id.calendar);
+        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+
+            @Override
+            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                Toast.makeText(getBaseContext(), "Selected Date: " + dayOfMonth + "/" + month + "/" + year, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
+
