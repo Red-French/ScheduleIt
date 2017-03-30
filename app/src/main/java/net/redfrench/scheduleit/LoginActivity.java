@@ -52,14 +52,12 @@ public class LoginActivity extends AppCompatActivity {
                             boolean success = jsonResponse.getBoolean("success");
 
                             if (success) {  // get details from jsonResponse and send data to UserAreaActivity
-                                Log.v("LOG", "success from backend");
                                 String name = jsonResponse.getString("name");
-                                int age = jsonResponse.getInt("age");
+                                String uname = jsonResponse.getString("username");
 
                                 Intent intent = new Intent(LoginActivity.this, BookingActivity.class);
                                 intent.putExtra("name", name);
-                                intent.putExtra("username", username);
-                                intent.putExtra("age", age);
+                                intent.putExtra("username", uname);
 
                                 startActivity(intent);
 
