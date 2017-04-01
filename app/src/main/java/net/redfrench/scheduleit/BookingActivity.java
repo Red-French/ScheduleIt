@@ -16,13 +16,23 @@ public class BookingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booking);
 
+        final TextView greetingMsg = (TextView) findViewById(R.id.tvGreeting);
         final TextView welcomeMsg = (TextView) findViewById(R.id.tvWelcome);
 
         Intent intent = getIntent();
         String name = intent.getStringExtra("name");
 
-        String message = name + ", welcome to the booking area.";
-        welcomeMsg.setText(message);
+        String greeting = "Hi, " + name + "!";
+        String bookMsg = "\n Choose a date to see available times below.";
+//        String editMsg = "\n You're next appointment is on the --- . Change or cancel below."
+
+        greetingMsg.setText(greeting);
+        // if () // if user already booked, show their appointment and ask if they want to change or cancel
+
+        welcomeMsg.setText(bookMsg);
+
+//            else if //
+//        welcomeMsg.setText(greetingMsg + editMsg);
 
         calendar = (CalendarView) findViewById(R.id.calendar);
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {

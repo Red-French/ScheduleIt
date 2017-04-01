@@ -8,21 +8,34 @@
     tools:context="net.redfrench.scheduleit.BookingActivity">
 
     <TextView
-        android:id="@+id/tvWelcome"
+        android:id="@+id/tvGreeting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="0dp"
         android:layout_marginTop="10dp"
-        android:text="Click a date and time, then confirm"
+        android:text="greetings"
         android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/tvWelcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvGreeting"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="Click a date and time, then confirm"
+        android:textSize="14sp"/>
 
     <CalendarView
         android:id="@+id/calendar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvWelcome"
+        android:layout_below="@id/tvWelcome"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="11dp"/>
+        />
 
 </RelativeLayout>
