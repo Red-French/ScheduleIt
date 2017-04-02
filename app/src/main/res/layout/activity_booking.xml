@@ -7,22 +7,21 @@
     android:layout_height="match_parent"
     tools:context="net.redfrench.scheduleit.BookingActivity">
 
-    <TextView
-        android:id="@+id/tvGreeting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="0dp"
-        android:layout_marginTop="10dp"
-        android:text="greetings"
-        android:textSize="18sp"/>
+    <!--<TextView-->
+        <!--android:id="@+id/tvGreeting"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginBottom="0dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:text="greetings"-->
+        <!--android:textSize="18sp"/>-->
 
     <TextView
         android:id="@+id/tvWelcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvGreeting"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="0dp"
         android:paddingLeft="10dp"
@@ -30,12 +29,30 @@
         android:text="Click a date and time, then confirm"
         android:textSize="14sp"/>
 
-    <CalendarView
-        android:id="@+id/calendar"
+    <ScrollView
+        android:id="@+id/calScroll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvWelcome"
-        android:layout_centerHorizontal="true"
-        />
+        android:layout_below="@id/tvWelcome">
+        <CalendarView
+            android:id="@+id/calendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"/>
+    </ScrollView>
+
+    <ListView
+        android:id="@+id/timeslots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/calScroll"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"/>
 
 </RelativeLayout>
