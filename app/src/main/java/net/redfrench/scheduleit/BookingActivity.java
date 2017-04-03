@@ -13,11 +13,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class BookingActivity extends AppCompatActivity {
 
     CalendarView calendar;
+    ArrayList<String> itemList;
+    ArrayAdapter<String> timeslotAdptr;
+    String dayOfAppointment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +42,7 @@ public class BookingActivity extends AppCompatActivity {
 
 
         String currentDate = java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
+        dayOfAppointment = currentDate;
         Log.v("LOG DATE", currentDate);
 
         //  ********** GREETING & MSG **********
@@ -44,7 +50,7 @@ public class BookingActivity extends AppCompatActivity {
         final TextView welcomeMsg = (TextView) findViewById(R.id.tvWelcome);
 
         Intent intent = getIntent();
-        String name = intent.getStringExtra("name");
+        final String name = intent.getStringExtra("name");
 
         String greeting = "Hi, " + name + "!";
         String bookMsg = "\n Choose a date to see available times below.";
@@ -66,7 +72,10 @@ public class BookingActivity extends AppCompatActivity {
 
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                Toast.makeText(getBaseContext(), "Selected Date: " + dayOfMonth + "/" + month + "/" + year, Toast.LENGTH_LONG).show();
+                month = month + 1;
+                dayOfAppointment = month + "/" + dayOfMonth + "/" + year;
+                Log.v("LOG", dayOfAppointment);
+                Toast.makeText(getBaseContext(), "Selected Date: " + month + "/" + dayOfMonth + "/" + year, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -85,7 +94,8 @@ public class BookingActivity extends AppCompatActivity {
                 "5:00"
         };
 
-        ListAdapter timeslotAdptr = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, timeslots);  // by default, 1st parameter is 'this'
+        itemList = new ArrayList<String>(Arrays.asList(timeslots));
+        timeslotAdptr = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, timeslots);  // by default, 1st parameter is 'this'
                                                                                                          // 2nd parameter is type of list
                                                                                                          // 3rd parameter is name of list
         ListView timeslotView = (ListView) findViewById(R.id.timeslots);
@@ -97,12 +107,31 @@ public class BookingActivity extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     String timeslot = String.valueOf(parent.getItemIdAtPosition(position));
                     String apmtTime = String.valueOf(parent.getItemAtPosition(position));  // gets array position
-                    Toast.makeText(BookingActivity.this, timeslot, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(BookingActivity.this, timeslot, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BookingActivity.this, name, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BookingActivity.this, dayOfAppointment, Toast.LENGTH_SHORT).show();
                     Toast.makeText(BookingActivity.this, apmtTime, Toast.LENGTH_LONG).show();
-
+                    itemList.add(apmtTime);
+                    timeslotAdptr.notifyDataSetChanged();
+                    Log.v("LOG", itemList.toString());
+                    Log.v("LOG", dayOfAppointment);
+                    Log.v("LOG", apmtTime);
                 }
             }
         );
+
+
+//        timeslotView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String newItem = String.valueOf().getText().toString();  // get user data
+//                // add new item to arraylist
+//                itemList.add(newItem);  // add user data to original item list
+//                // notify listview of data changed
+//                adapter.notifyDataSetChanged();  // notify adapter of data change
+//            }
+//        });
+
     }
 }
 
