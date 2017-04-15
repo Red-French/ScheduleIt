@@ -13,6 +13,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -20,49 +22,48 @@ import java.util.Calendar;
 public class BookingActivity extends AppCompatActivity {
 
     CalendarView calendar;
-    ArrayList<String> itemList;
-    ArrayAdapter<String> timeslotAdptr;
+    ArrayList<String> apmtTimeSlots;
+    ArrayAdapter<String> apmtTimesAdptr;
     String dayOfAppointment;
+    int chosenMonth;
+    int chosenDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booking);
 
+        //  ********** INITIALIZE CALENDAR **********
         Calendar c = Calendar.getInstance();
         int mYear = c.get(Calendar.YEAR);
         int mMonth = c.get(Calendar.MONTH);
         int mDay = c.get(Calendar.DAY_OF_MONTH);
 
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-        long time = cal.getTimeInMillis();
-//        DatePicker datepicker = (DatePicker) findViewById(R.id.datePicker);
-//        datepicker.setMinDate(time);
-
+        final long time = cal.getTimeInMillis();
 
         String currentDate = java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
         dayOfAppointment = currentDate;
         Log.v("LOG DATE", currentDate);
 
         //  ********** GREETING & MSG **********
-//        final TextView greetingMsg = (TextView) findViewById(R.id.tvGreeting);
+        final TextView greetingMsg = (TextView) findViewById(R.id.tvGreeting);
         final TextView welcomeMsg = (TextView) findViewById(R.id.tvWelcome);
 
         Intent intent = getIntent();
         final String name = intent.getStringExtra("name");
 
-        String greeting = "Hi, " + name + "!";
+        String greeting = "Hello, " + name + "!";
         String bookMsg = "\n Choose a date to see available times below.";
 //        String editMsg = "\n You're next appointment is on the --- . Change or cancel below."
 
-//        greetingMsg.setText(greeting);
+        greetingMsg.setText(greeting);
         // if () // if user already booked, show their appointment and ask if they want to change or cancel
-
         welcomeMsg.setText(bookMsg);
-
 //            else if //
-//        welcomeMsg.setText(greetingMsg + editMsg);
+//        greetingMsg.setText(greeting + editMsg);
+
 
 
         //  ********** CALENDAR **********
@@ -72,16 +73,23 @@ public class BookingActivity extends AppCompatActivity {
 
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+
+//              TODO:
+//              DATABASE CALL FOR CHOSEN DATE'S APPOINTMENTS
+//              SET timeSlots ARRAY TO TIMES AND BOOKED APPOINTMENTS
+//              DISABLE CLICK FOR POSITIONS OF BOOKED APPOINTMENTS
+
                 month = month + 1;
-                dayOfAppointment = month + "/" + dayOfMonth + "/" + year;
-                Log.v("LOG", dayOfAppointment);
-                Toast.makeText(getBaseContext(), "Selected Date: " + month + "/" + dayOfMonth + "/" + year, Toast.LENGTH_LONG).show();
+                dayOfAppointment = null;
+                dayOfAppointment = month + "/" + dayOfMonth;
+                Log.v("DATE", dayOfAppointment);
+//                Toast.makeText(getBaseContext(), "Selected Date: " + month + "/" + dayOfMonth + "/" + year, Toast.LENGTH_LONG).show();
             }
         });
 
 
         //  ********** TIMESLOTS **********
-        String[] timeslots = {
+        final String[] timeSlots = {
                 "8:00", "8:30",
                 "9:00", "9:30",
                 "10:00", "10:30",
@@ -94,44 +102,94 @@ public class BookingActivity extends AppCompatActivity {
                 "5:00"
         };
 
-        itemList = new ArrayList<String>(Arrays.asList(timeslots));
-        timeslotAdptr = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, timeslots);  // by default, 1st parameter is 'this'
-                                                                                                         // 2nd parameter is type of list
-                                                                                                         // 3rd parameter is name of list
-        ListView timeslotView = (ListView) findViewById(R.id.timeslots);
-        timeslotView.setAdapter(timeslotAdptr);
 
-        timeslotView.setOnItemClickListener(
+
+        //  ********** LOAD ALL APPOINTMENT TIMES INTO VIEW **********
+        apmtTimeSlots = new ArrayList<String>(Arrays.asList(timeSlots));
+        apmtTimesAdptr = new ArrayAdapter<String>(this, R.layout.item, R.id.apmtTimeSlotsView, timeSlots);
+        final ListView apmtTimesView = (ListView) findViewById(R.id.timeSlotsView);
+        apmtTimesView.setAdapter(apmtTimesAdptr);
+
+
+        //  ********** LOAD USER NAME INTO CHOSEN APPOINTMENT-TIME SLOT **********
+        apmtTimesView.setOnItemClickListener(
             new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String timeslot = String.valueOf(parent.getItemIdAtPosition(position));
-                    String apmtTime = String.valueOf(parent.getItemAtPosition(position));  // gets array position
-//                    Toast.makeText(BookingActivity.this, timeslot, Toast.LENGTH_SHORT).show();
-                    Toast.makeText(BookingActivity.this, name, Toast.LENGTH_SHORT).show();
-                    Toast.makeText(BookingActivity.this, dayOfAppointment, Toast.LENGTH_SHORT).show();
-                    Toast.makeText(BookingActivity.this, apmtTime, Toast.LENGTH_LONG).show();
-                    itemList.add(apmtTime);
-                    timeslotAdptr.notifyDataSetChanged();
-                    Log.v("LOG", itemList.toString());
+                    String timeIndexClicked = String.valueOf(parent.getItemIdAtPosition(position));
+                    String chosenTime = String.valueOf(parent.getItemAtPosition(position));
+//                    Toast.makeText(BookingActivity.this, timeIndexClicked, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BookingActivity.this, "You're appointment is set for " + dayOfAppointment + " at " + chosenTime, Toast.LENGTH_LONG).show();
+
+//                    Log.v("LOG", apmtTimeSlots.toString());
                     Log.v("LOG", dayOfAppointment);
-                    Log.v("LOG", apmtTime);
+                    Log.v("LOG", chosenTime);
+//                    TextView newApmt = (TextView) findViewById(R.id.patientNameView);
+//                    newApmt.setText("       " + name);
+
+                    switch(position) {
+                        case 0:
+                            timeSlots[position]="8:00" + "       " + name;
+                            break;
+                        case 1:
+                            timeSlots[position]="8:30" + "       " + name;
+                            break;
+                        case 2:
+                            timeSlots[position]="9:00" + "       " + name;
+                            break;
+                        case 3:
+                            timeSlots[position]="9:30" + "       " + name;
+                            break;
+                        case 4:
+                            timeSlots[position]="10:00" + "       " + name;
+                            break;
+                        case 5:
+                            timeSlots[position]="10:30" + "       " + name;
+                            break;
+                        case 6:
+                            timeSlots[position]="11:00" + "       " + name;
+                            break;
+                        case 7:
+                            timeSlots[position]="11:30" + "       " + name;
+                            break;
+                        case 8:
+                            timeSlots[position]="12:00" + "       " + name;
+                            break;
+                        case 9:
+                            timeSlots[position]="12:30" + "       " + name;
+                            break;
+                        case 10:
+                            timeSlots[position]="1:00" + "       " + name;
+                            break;
+                        case 11:
+                            timeSlots[position]="1:30" + "       " + name;
+                            break;
+                        case 12:
+                            timeSlots[position]="2:00" + "       " + name;
+                            break;
+                        case 13:
+                            timeSlots[position]="2:30" + "       " + name;
+                            break;
+                        case 14:
+                            timeSlots[position]="3:00" + "       " + name;
+                            break;
+                        case 15:
+                            timeSlots[position]="3:30" + "       " + name;
+                            break;
+                        case 16:
+                            timeSlots[position]="4:00" + "       " + name;
+                            break;
+                        case 17:
+                            timeSlots[position]="4:30" + "       " + name;
+                            break;
+                        case 18:
+                            timeSlots[position]="5:00" + "       " + name;
+                            break;
+                    };
+                    apmtTimesAdptr.notifyDataSetChanged();
                 }
             }
         );
-
-
-//        timeslotView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String newItem = String.valueOf().getText().toString();  // get user data
-//                // add new item to arraylist
-//                itemList.add(newItem);  // add user data to original item list
-//                // notify listview of data changed
-//                adapter.notifyDataSetChanged();  // notify adapter of data change
-//            }
-//        });
-
     }
 }
 
