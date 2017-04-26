@@ -36,11 +36,12 @@ public class RegisterActivity extends AppCompatActivity {
                 final String username = etUsername.getText().toString();
                 final String password = etPassword.getText().toString();
 
+                // responseListener, below, is A PARAMETER of RegisterRequest() (below this constructor)
                 final Response.Listener<String> responseListener = new Response.Listener<String>() {
 
-                    // below happens when response has been executed
+                    // below happens inside Register.php when the response has been executed
                     @Override
-                    public void onResponse(String response) {  // 'response' is the boolean response from Register.php
+                    public void onResponse(String response) {  // 'response' is the boolean response from Register.php (volley provides this response)
                         try {
                             JSONObject jsonResponse = new JSONObject(response);  // gets 'response' string Volley has given back; 'response' was encoded into JSON string in Register.php
                             boolean success = jsonResponse.getBoolean("success");  // 'success' given a boolean value in Register.php
@@ -60,7 +61,8 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 };
 
-                RegisterRequest registerRequest = new RegisterRequest(name, username, password, responseListener);
+                // create a request
+                RegisterRequest registerRequest = new RegisterRequest(name, username, password, responseListener);  // responseListener is created above; RegisterRequest() is in RegisterRequest.java
                 RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
                 Log.v("registerRequest", String.valueOf(registerRequest));
                 queue.add(registerRequest);
