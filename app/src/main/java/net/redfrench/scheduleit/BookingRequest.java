@@ -16,7 +16,7 @@ public class BookingRequest extends StringRequest{
 
       // pass data to Volley
       super(Method.POST, BOOKING_REQUEST_URL, listener, null);  // post sends to URL which returns data which listener listens for
-      
+
       // pass information to the request via params
       params = new HashMap<>();
       params.put("name", name);  // put data into HashMap
