@@ -1,6 +1,7 @@
 package net.redfrench.scheduleit;
 
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -24,9 +31,11 @@ public class BookingActivity extends AppCompatActivity {
     CalendarView calendar;
     ArrayList<String> apmtTimeSlots;
     ArrayAdapter<String> apmtTimesAdptr;
-    String dayOfAppointment;
-    int chosenMonth;
-    int chosenDay;
+//    String dayOfAppointment;
+    String appointmentDate;
+    String chosenMonth;
+    String chosenDay;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,18 +43,12 @@ public class BookingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_booking);
 
         //  ********** INITIALIZE CALENDAR **********
-        Calendar c = Calendar.getInstance();
-        int mYear = c.get(Calendar.YEAR);
-        int mMonth = c.get(Calendar.MONTH);
-        int mDay = c.get(Calendar.DAY_OF_MONTH);
-
         final Calendar cal = Calendar.getInstance();
-        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+//        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
         final long time = cal.getTimeInMillis();
 
-        String currentDate = java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
-        dayOfAppointment = currentDate;
-        Log.v("LOG DATE", currentDate);
+//        String currentDate = java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
+//        dayOfAppointment = currentDate;
 
         //  ********** GREETING & MSG **********
         final TextView greetingMsg = (TextView) findViewById(R.id.tvGreeting);
@@ -75,15 +78,105 @@ public class BookingActivity extends AppCompatActivity {
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
 
 //              TODO:
-//              DATABASE CALL FOR CHOSEN DATE'S APPOINTMENTS
-//              SET timeSlots ARRAY TO TIMES AND BOOKED APPOINTMENTS
 //              DISABLE CLICK FOR POSITIONS OF BOOKED APPOINTMENTS
 
+                switch (month) {
+                    case 0:  chosenMonth = "january";
+                        break;
+                    case 1:  chosenMonth = "february";
+                        break;
+                    case 2:  chosenMonth = "march";
+                        break;
+                    case 3:  chosenMonth = "april";
+                        break;
+                    case 4:  chosenMonth = "may";
+                        break;
+                    case 5:  chosenMonth = "june";
+                        break;
+                    case 6:  chosenMonth = "july";
+                        break;
+                    case 7:  chosenMonth = "august";
+                        break;
+                    case 8:  chosenMonth = "septemter";
+                        break;
+                    case 9: chosenMonth = "october";
+                        break;
+                    case 10: chosenMonth = "november";
+                        break;
+                    case 11: chosenMonth = "december";
+                        break;
+                    default: chosenMonth = "Invalid month";
+                        break;
+                };
+
+                switch (dayOfMonth) {
+                    case 1:  chosenDay = "one";
+                        break;
+                    case 2:  chosenDay = "two";
+                        break;
+                    case 3:  chosenDay = "three";
+                        break;
+                    case 4:  chosenDay = "four";
+                        break;
+                    case 5:  chosenDay = "five";
+                        break;
+                    case 6:  chosenDay = "six";
+                        break;
+                    case 7:  chosenDay = "seven";
+                        break;
+                    case 8:  chosenDay = "eight";
+                        break;
+                    case 9:  chosenDay = "nine";
+                        break;
+                    case 10: chosenDay = "ten";
+                        break;
+                    case 11: chosenDay = "eleven";
+                        break;
+                    case 12: chosenDay = "tweleve";
+                        break;
+                    case 13:  chosenDay = "thirteen";
+                        break;
+                    case 14:  chosenDay = "fourteen";
+                        break;
+                    case 15:  chosenDay = "fifteen";
+                        break;
+                    case 16:  chosenDay = "sixteen";
+                        break;
+                    case 17:  chosenDay = "seventeen";
+                        break;
+                    case 18:  chosenDay = "eighteen";
+                        break;
+                    case 19:  chosenDay = "nineteen";
+                        break;
+                    case 20:  chosenDay = "twenty";
+                        break;
+                    case 21:  chosenDay = "twnetyone";
+                        break;
+                    case 22: chosenDay = "twentytwo";
+                        break;
+                    case 23: chosenDay = "twentythree";
+                        break;
+                    case 24: chosenDay = "twentyfour";
+                        break;
+                    case 25:  chosenDay = "twentyfive";
+                        break;
+                    case 26:  chosenDay = "twentysix";
+                        break;
+                    case 27:  chosenDay = "twentyseven";
+                        break;
+                    case 28:  chosenDay = "twentyeight";
+                        break;
+                    case 29: chosenDay = "twentynine";
+                        break;
+                    case 30: chosenDay = "thirty";
+                        break;
+                    case 31: chosenDay = "thirtyone";
+                        break;
+                    default: chosenDay = "Invalid day";
+                        break;
+                }
                 month = month + 1;
-                dayOfAppointment = null;
-                dayOfAppointment = month + "/" + dayOfMonth;
-                Log.v("DATE", dayOfAppointment);
-//                Toast.makeText(getBaseContext(), "Selected Date: " + month + "/" + dayOfMonth + "/" + year, Toast.LENGTH_LONG).show();
+                appointmentDate = month + "/" + dayOfMonth;  // for user message
             }
         });
 
@@ -117,13 +210,13 @@ public class BookingActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     String timeIndexClicked = String.valueOf(parent.getItemIdAtPosition(position));
-                    String chosenTime = String.valueOf(parent.getItemAtPosition(position));
+                    String chosenTime = String.valueOf(parent.getItemAtPosition(position));  // sent to database; also for user message
 //                    Toast.makeText(BookingActivity.this, timeIndexClicked, Toast.LENGTH_SHORT).show();
-                    Toast.makeText(BookingActivity.this, "You're appointment is set for " + dayOfAppointment + " at " + chosenTime, Toast.LENGTH_LONG).show();
+                    Toast.makeText(BookingActivity.this, "You're appointment is set for " + appointmentDate + " at " + chosenTime, Toast.LENGTH_LONG).show();
 
 //                    Log.v("LOG", apmtTimeSlots.toString());
-                    Log.v("LOG", dayOfAppointment);
-                    Log.v("LOG", chosenTime);
+//                    Log.v("dayOfAppointment", dayOfAppointment);
+//                    Log.v("timeIndexClicked", timeIndexClicked);
 //                    TextView newApmt = (TextView) findViewById(R.id.patientNameView);
 //                    newApmt.setText("       " + name);
 
@@ -187,9 +280,41 @@ public class BookingActivity extends AppCompatActivity {
                             break;
                     };
                     apmtTimesAdptr.notifyDataSetChanged();
+
+                    // responseListener is a PARAMETER of BookingRequest()
+                    Response.Listener<String> responseListener = new Response.Listener<String>() {
+
+                        // below happens inside Booking.php when the response has been executed
+                        @Override
+                        public void onResponse(String response) {  // 'response' is the boolean response from Booking.php (volley provides this response)
+                            try {
+                                JSONObject jsonResponse = new JSONObject(response);  // gets 'response' string Volley has given back; 'response' was encoded into JSON string in Booking.php
+                                boolean success = jsonResponse.getBoolean("success");  // 'success' given a boolean value in Booking.php
+                                if(success) {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(BookingActivity.this);
+                                    builder.setMessage("Booking success")
+                                            .setNegativeButton("Retry", null)
+                                            .create()
+                                            .show();
+                                } else {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(BookingActivity.this);
+                                    builder.setMessage("Registration failed")
+                                            .setNegativeButton("Retry", null)
+                                            .create()
+                                            .show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+
+                    BookingRequest bookingRequest = new BookingRequest(name, chosenMonth, chosenDay, chosenTime, responseListener);
+                    RequestQueue queue = Volley.newRequestQueue(BookingActivity.this);
+                    Log.v("bookingRequest", String.valueOf(bookingRequest));
+                    queue.add(bookingRequest);
                 }
             }
         );
     }
 }
-
