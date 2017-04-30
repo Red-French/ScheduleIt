@@ -1,25 +1,28 @@
 <?php
-    // $con = mysqli_connect("my_host", "my_user", "my_password", "my_database");
-    $con = mysqli_connect("localhost", "id1157462_unclefatty", "000webhost2017", "id1157462_scheduler");
+  include "dbconfig.php";
 
-    $username = $_POST["username"];  // Android app will pass username and password
-    $password = $_POST["password"];
+  $con = mysqli_connect($hostname, $username, $password, $database) or
+  trigger_error(mysql_error(),E_USER_ERROR);
 
-    $statement = mysqli_prepare($con, "SELECT * FROM auth WHERE username = ? AND password = ?");
-    mysqli_stmt_bind_param($statement, "ss", $username, $password);
-    mysqli_stmt_execute($statement);
-    mysqli_stmt_store_result($statement);
-    mysqli_stmt_bind_result($statement, $userID, $name, $username, $password);
+  $username = $_POST["username"];  // Android app will pass username and password
+  $password = $_POST["password"];
 
-    $response = array();
-    $response["success"] = false;
+  $statement = mysqli_prepare($con, "SELECT * FROM auth WHERE username = ? AND password = ?");
+  mysqli_stmt_bind_param($statement, "ss", $username, $password);
+  mysqli_stmt_execute($statement);
+  mysqli_stmt_store_result($statement);
+  mysqli_stmt_bind_result($statement, $userID, $name, $username, $password);
 
-    while(mysqli_stmt_fetch($statement)){
-        $response["success"] = true;
-        $response["name"] = $name;
-        $response["username"] = $username;
-        $response["password"] = $password;
-    }
+  $response = array();
+  $response["Login success"] = false;
 
-    echo json_encode($response);
+  while(mysqli_stmt_fetch($statement)){
+      $response["success"] = true;
+      $response["name"] = $name;
+      $response["username"] = $username;
+      $response["password"] = $password;
+  }
+
+  echo json_encode($response);
+
 ?>
