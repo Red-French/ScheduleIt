@@ -1,8 +1,14 @@
 package net.redfrench.scheduleit;
 
-/**
- * Created by user on 4/27/17.
- */
+import android.util.Log;
+
 
 public class Services {
+
+    public static String testo() {
+        Log.v("LOG", "well, hello there, red");
+        return "Red";
+    }
+
+
 }
