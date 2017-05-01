@@ -1,9 +1,11 @@
 package net.redfrench.scheduleit;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Config;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,6 +20,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -25,6 +28,9 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.function.ToDoubleBiFunction;
+
+import static net.redfrench.scheduleit.Services.testo;
 
 public class BookingActivity extends AppCompatActivity {
 
@@ -35,6 +41,10 @@ public class BookingActivity extends AppCompatActivity {
     String appointmentDate;
     String chosenMonth;
     String chosenDay;
+    JSONObject json = null;
+
+    private JSONArray result;
+    public ArrayList<String> schedule;
 
 
     @Override
@@ -68,17 +78,18 @@ public class BookingActivity extends AppCompatActivity {
 //        greetingMsg.setText(greeting + editMsg);
 
 
-
         //  ********** CALENDAR **********
         calendar = (CalendarView) findViewById(R.id.calendar);
         calendar.setMinDate(time);
+
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+
+//            TODO: make request: then backend -> SELECT column_name FROM chosenMonth;
+//            TODO: put returned data in 'DOM'
+//            TODO: gray-out booked appontments other than this user
 
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-
-//              TODO:
-//              DISABLE CLICK FOR POSITIONS OF BOOKED APPOINTMENTS
 
                 switch (month) {
                     case 0:  chosenMonth = "january";
@@ -177,7 +188,76 @@ public class BookingActivity extends AppCompatActivity {
                 }
                 month = month + 1;
                 appointmentDate = month + "/" + dayOfMonth;  // for user message
+
+
+                Response.Listener<String> responseListener = new Response.Listener<String>() {
+
+                    // below happens inside GetSchedule.php when the response has been executed
+                    @Override
+                    public void onResponse(String response) {  // 'response' is the boolean response from GetSchedule.php (volley provides this response)
+                        try {
+//                            JSONObject jsonResponse = new JSONObject(response);  // gets 'response' string Volley has given back; 'response' was encoded into JSON string in Booking.php
+//                            JSONArray schedule = jsonResponse.getJSONArray(response);
+
+//                            result = jsonResponse.getJSONArray(response);  // return from GetSchedule.php
+
+//                            for(int i=0; i < schedule.length(); i++) {
+//                                System.out.println("YES!!!!!!!!!!!!!!");
+//                            }
+//                            json = jArray.getJSONObject(0);
+
+
+                            JSONArray results = new JSONArray(response);
+                            System.out.println(results.length());
+                            for (int i=0; i<results.length(); i++) {
+                                JSONObject obj = results.getJSONObject(i);
+                                System.out.println(obj);
+                            }
+
+                            TextView apmtBook = (TextView) findViewById(R.id.tvWelcome);
+                            apmtBook.setText("Well, hello there, Red.");
+
+
+                            Log.v("LOG", "hello from response listener");
+//                            getSchedule(result);
+
+                            if(true) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(BookingActivity.this);
+                                builder.setMessage("Schedule retrieval success")
+                                        .setNegativeButton("Retry", null)
+                                        .create()
+                                        .show();
+                            } else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(BookingActivity.this);
+                                builder.setMessage("Schedule retrieval failed")
+                                        .setNegativeButton("Retry", null)
+                                        .create()
+                                        .show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+
+                ScheduleRequest scheduleRequest = new ScheduleRequest(name, chosenMonth, chosenDay, responseListener);
+                RequestQueue queue = Volley.newRequestQueue(BookingActivity.this);
+                Log.v("scheduleRequest", String.valueOf(scheduleRequest));
+                queue.add(scheduleRequest);
             }
+
+            private void getSchedule(JSONArray j) {
+                Log.v("LOG", "I am here in getSchedule!!!!!");
+//                for(int i=0;i<j.length();i++){
+//                    try {
+//                        JSONObject json = j.getJSONObject(i);
+//                        schedule.add(json.getString());
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+            }
+
         });
 
 
@@ -194,7 +274,6 @@ public class BookingActivity extends AppCompatActivity {
                 "4:00", "4:30",
                 "5:00"
         };
-
 
 
         //  ********** LOAD ALL APPOINTMENT TIMES INTO VIEW **********
@@ -280,6 +359,7 @@ public class BookingActivity extends AppCompatActivity {
                             break;
                     };
                     apmtTimesAdptr.notifyDataSetChanged();
+                    testo();  // test service
 
                     // responseListener is a PARAMETER of BookingRequest()
                     Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -317,4 +397,5 @@ public class BookingActivity extends AppCompatActivity {
             }
         );
     }
+
 }
