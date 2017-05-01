@@ -41,6 +41,7 @@ public class BookingActivity extends AppCompatActivity {
     String appointmentDate;
     String chosenMonth;
     String chosenDay;
+    int chosenDayforUserMsg;
     JSONObject json = null;
 
     private JSONArray result;
@@ -89,8 +90,8 @@ public class BookingActivity extends AppCompatActivity {
 //            TODO: gray-out booked appontments other than this user
 
             @Override
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-
+            public void onSelectedDayChange(CalendarView view, int year, int month, final int dayOfMonth) {
+                chosenDayforUserMsg = dayOfMonth;
                 switch (month) {
                     case 0:  chosenMonth = "january";
                         break;
@@ -213,9 +214,6 @@ public class BookingActivity extends AppCompatActivity {
                                 JSONObject obj = results.getJSONObject(i);
                                 System.out.println(obj);
                             }
-
-                            TextView apmtBook = (TextView) findViewById(R.id.tvWelcome);
-                            apmtBook.setText("Well, hello there, Red.");
 
 
                             Log.v("LOG", "hello from response listener");
@@ -376,12 +374,20 @@ public class BookingActivity extends AppCompatActivity {
                                             .setNegativeButton("Retry", null)
                                             .create()
                                             .show();
+
+                                    String apmtMonth = chosenMonth.toUpperCase();
+                                    TextView apmtBook = (TextView) findViewById(R.id.tvGreeting);
+                                    apmtBook.setText("We'll see you on " +  apmtMonth + " " + chosenDayforUserMsg + "!");
+
                                 } else {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(BookingActivity.this);
-                                    builder.setMessage("Registration failed")
+                                    builder.setMessage("Booking failed")
                                             .setNegativeButton("Retry", null)
                                             .create()
                                             .show();
+
+                                    TextView apmtBook = (TextView) findViewById(R.id.tvGreeting);
+                                    apmtBook.setText("Oops. Something went wrong. Please call 790-0000 to book your appointment.");
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
