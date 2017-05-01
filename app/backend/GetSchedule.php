@@ -1,26 +1,32 @@
 <?php
   include "dbconfig.php";
 
-  $chosenDay = twentyfive;  // get data for this column
+  // $chosenDay = twentyseven;  // get data for this column
+  // $name = $_POST("name");
+  $chosenDay = $_POST["chosenDay"];
+  $chosenMonth = $_POST["chosenMonth"];
 
   $mysqli = NEW MySQLi($hostname, $username, $password, $database);
 
-  $resultSet = $mysqli->query("SELECT * FROM april");
+  $resultSet = $mysqli->query("SELECT * FROM ".$chosenMonth);
 
   $n = 0;
+  $result = array();
 
   if ($resultSet->num_rows != 0) {
-     while($rows = $resultSet->fetch_assoc( )) {
+     while($row = $resultSet->fetch_assoc()) {
        $n++;
-       $patient = $rows[$chosenDay];  // for each row, get data from column $chosenDay
-       $apmtTime = $rows['time'];  // for each row, get the data from column 'time'
+       $patient = $row[$chosenDay];  // for each row, get data from column $chosenDay
+       $apmtTime = $row['time'];  // for each row, get the data from column 'time'
 
-      if ($n == 1) {  // PRINT HEADER FIRST TIME THROUGH
-        echo "<p>Appointments for date of $chosenDay</p>";
+       array_push($result,array($apmtTime=>$patient));
+      // array_push($result[$apmtTime]=$patient);  // prints whole month
+
+      if ($n == 19) {
+        $response["success"] = true;
+        echo json_encode($result);
       }
-
-        echo "<p>$apmtTime: $patient</p>";  // PRINT DATA
-     }
+    }
   } else {
     echo "No results.";
   }
