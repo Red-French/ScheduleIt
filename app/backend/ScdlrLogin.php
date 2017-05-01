@@ -14,9 +14,9 @@
   mysqli_stmt_bind_result($statement, $userID, $name, $username, $password);
 
   $response = array();
-  $response["Login success"] = false;
+  $response["success"] = false;
 
-  while(mysqli_stmt_fetch($statement)){
+  while(mysqli_stmt_fetch($statement)){  // fetch results into the bound variables
       $response["success"] = true;
       $response["name"] = $name;
       $response["username"] = $username;

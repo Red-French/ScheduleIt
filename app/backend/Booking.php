@@ -16,7 +16,7 @@
   mysqli_stmt_execute($statement);
 
   $response = array();
-  $response["Booking success"] = true;
+  $response["success"] = true;
 
   echo json_encode($response);  // gets turned into JSONobject in calling Activity (RegisterActivity, BookingActivity)
 
