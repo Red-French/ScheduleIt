@@ -28,6 +28,7 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.function.ToDoubleBiFunction;
 
 import static net.redfrench.scheduleit.Services.testo;
@@ -85,7 +86,6 @@ public class BookingActivity extends AppCompatActivity {
 
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
-//            TODO: make request: then backend -> SELECT column_name FROM chosenMonth;
 //            TODO: put returned data in 'DOM'
 //            TODO: gray-out booked appontments other than this user
 
@@ -197,29 +197,18 @@ public class BookingActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {  // 'response' is the boolean response from GetSchedule.php (volley provides this response)
                         try {
-//                            JSONObject jsonResponse = new JSONObject(response);  // gets 'response' string Volley has given back; 'response' was encoded into JSON string in Booking.php
-//                            JSONArray schedule = jsonResponse.getJSONArray(response);
+//                            JSONObject successMsg = new JSONObject(response);
+//                            boolean success = successMsg.getBoolean("success");  // TODO: get success msg from GetSchedule.php
 
-//                            result = jsonResponse.getJSONArray(response);  // return from GetSchedule.php
-
-//                            for(int i=0; i < schedule.length(); i++) {
-//                                System.out.println("YES!!!!!!!!!!!!!!");
+                            JSONArray results = new JSONArray(response);// get 'response' string Volley has given back; 'response' was encoded into JSON string in Booking.php
+//                            System.out.println(results.length());
+//                            for (int i=0; i<results.length(); i++) {
+//                                JSONObject obj = results.getJSONObject(i);
+//                                System.out.println(obj);
+                                getSchedule(results);
 //                            }
-//                            json = jArray.getJSONObject(0);
 
-
-                            JSONArray results = new JSONArray(response);
-                            System.out.println(results.length());
-                            for (int i=0; i<results.length(); i++) {
-                                JSONObject obj = results.getJSONObject(i);
-                                System.out.println(obj);
-                            }
-
-
-                            Log.v("LOG", "hello from response listener");
-//                            getSchedule(result);
-
-                            if(true) {
+                            if(true) {  // TODO: get success msg from GetSchedule.php and check here
                                 AlertDialog.Builder builder = new AlertDialog.Builder(BookingActivity.this);
                                 builder.setMessage("Schedule retrieval success")
                                         .setNegativeButton("Retry", null)
@@ -244,18 +233,23 @@ public class BookingActivity extends AppCompatActivity {
                 queue.add(scheduleRequest);
             }
 
-            private void getSchedule(JSONArray j) {
-                Log.v("LOG", "I am here in getSchedule!!!!!");
-//                for(int i=0;i<j.length();i++){
-//                    try {
-//                        JSONObject json = j.getJSONObject(i);
-//                        schedule.add(json.getString());
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-            }
+            private void getSchedule(JSONArray daysSchedule) {
+//                Log.v("LOG_SCDL", daysSchedule.toString());
+                for (int i = 0; i < daysSchedule.length(); i++) {
+                    try {
+                        JSONObject theSchdl = daysSchedule.getJSONObject(i);
+                        Iterator<String> keys = theSchdl.keys();
 
+                        while (keys.hasNext()) {
+                            String key = keys.next();
+                            System.out.println("Time: " + key + " - " + theSchdl.get(key));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
         });
 
 
