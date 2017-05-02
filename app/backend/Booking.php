@@ -18,6 +18,7 @@
   $response = array();
   $response["success"] = true;
 
-  echo json_encode($response);  // gets turned into JSONobject in calling Activity (RegisterActivity, BookingActivity)
+  echo json_encode($response);  // json-encoded string gets turned into JSONobject in calling Activity (RegisterActivity)
+                                // gets turned into JSONArray in calling Activity (BookingActivity)
 
 ?>

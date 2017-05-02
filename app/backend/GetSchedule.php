@@ -1,8 +1,7 @@
 <?php
   include "dbconfig.php";
 
-  // $chosenDay = twentyseven;  // get data for this column
-  // $name = $_POST("name");
+  // $name = $_POST("name");  // TODO: check for existing appointment on same day
   $chosenDay = $_POST["chosenDay"];
   $chosenMonth = $_POST["chosenMonth"];
 
