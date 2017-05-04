@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
-import java.util.function.ToDoubleBiFunction;
+//import java.util.function.ToDoubleBiFunction;
 
 import static net.redfrench.scheduleit.Services.testo;
 
@@ -207,6 +207,7 @@ public class BookingActivity extends AppCompatActivity {
 //                            for (int i=0; i<results.length(); i++) {
 //                                JSONObject obj = results.getJSONObject(i);
 //                                System.out.println(obj);
+                                schedule.clear();
                                 getSchedule(results);
 //                            }
 
@@ -245,7 +246,7 @@ public class BookingActivity extends AppCompatActivity {
                         while (keys.hasNext()) {
                             String key = keys.next();
                             System.out.println("Time: " + key + " - " + theSchdl.get(key));
-                            String thisTimeSlot = key + " - " + theSchdl.get(key);
+                            String thisTimeSlot = key + "       " + theSchdl.get(key);
                             schedule.add(thisTimeSlot);
                             loadSchedule();
 //                            System.out.println("schedule =" + schedule);
@@ -264,22 +265,22 @@ public class BookingActivity extends AppCompatActivity {
 
 
         //  ********** TIMESLOTS **********
-        final String[] timeSlots = {
-                "8:00", "8:30",
-                "9:00", "9:30",
-                "10:00", "10:30",
-                "11:00", "11:30",
-                "12:00", "12:30",
-                "1:00", "1:30",
-                "2:00", "2:30",
-                "3:00", "3:30",
-                "4:00", "4:30",
-                "5:00"
-        };
+//        final String[] timeSlots = {
+//                "8:00", "8:30",
+//                "9:00", "9:30",
+//                "10:00", "10:30",
+//                "11:00", "11:30",
+//                "12:00", "12:30",
+//                "1:00", "1:30",
+//                "2:00", "2:30",
+//                "3:00", "3:30",
+//                "4:00", "4:30",
+//                "5:00"
+//        };
 
         //  ********** LOAD ALL APPOINTMENT TIMES INTO VIEW **********
 //        apmtTimeSlots = new ArrayList<String>(Arrays.asList(timeSlots));
-        apmtTimesAdptr = new ArrayAdapter<String>(this, R.layout.item, R.id.apmtTimeSlotsView, timeSlots);
+        apmtTimesAdptr = new ArrayAdapter<String>(this, R.layout.item, R.id.apmtTimeSlotsView, schedule);
         final ListView apmtTimesView = (ListView) findViewById(R.id.timeSlotsView);
         apmtTimesView.setAdapter(apmtTimesAdptr);
 
@@ -289,8 +290,73 @@ public class BookingActivity extends AppCompatActivity {
             new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String timeIndexClicked = String.valueOf(parent.getItemIdAtPosition(position));  // get reference to clicked item
-                    String chosenTime = String.valueOf(parent.getItemAtPosition(position));  // gets sent to database; also used in user message
+                    int timeIndexClicked = (int)parent.getItemIdAtPosition(position);  // get reference to clicked item
+//                    Log.v("timeIndexClicked =", timeIndexClicked);
+                    String chosenTime = "";
+
+                    switch(timeIndexClicked) {
+                        case 0:
+                            chosenTime = "8:00";
+                            break;
+                        case 1:
+                            chosenTime = "8:30";
+                            break;
+                        case 2:
+                            chosenTime = "9:00";
+                            break;
+                        case 3:
+                            chosenTime = "9:30";
+                            break;
+                        case 4:
+                            chosenTime = "10:00";
+                            break;
+                        case 5:
+                            chosenTime = "10:30";
+                            break;
+                        case 6:
+                            chosenTime = "11:00";
+                            break;
+                        case 7:
+                            chosenTime = "11:30";
+                            break;
+                        case 8:
+                            chosenTime = "12:00";
+                            break;
+                        case 9:
+                            chosenTime = "12:30";
+                            break;
+                        case 10:
+                            chosenTime = "1:00";
+                            break;
+                        case 11:
+                            chosenTime = "1:30";
+                            break;
+                        case 12:
+                            chosenTime = "2:00";
+                            break;
+                        case 13:
+                            chosenTime = "2:30";
+                            break;
+                        case 14:
+                            chosenTime = "3:00";
+                            break;
+                        case 15:
+                            chosenTime = "3:30";
+                            break;
+                        case 16:
+                            chosenTime = "4:00";
+                            break;
+                        case 17:
+                            chosenTime = "4:30";
+                            break;
+                        case 18:
+                            chosenTime = "5:00";
+                            break;
+                    };
+
+
+
+//                    String chosenTime = String.valueOf(parent.getItemAtPosition(position));  // gets sent to database; also used in user message
 //                    Toast.makeText(BookingActivity.this, timeIndexClicked, Toast.LENGTH_SHORT).show();
                     Toast.makeText(BookingActivity.this, "You're appointment is set for " + appointmentDate + " at " + chosenTime, Toast.LENGTH_LONG).show();
 
@@ -300,67 +366,9 @@ public class BookingActivity extends AppCompatActivity {
 //                    TextView newApmt = (TextView) findViewById(R.id.patientNameView);
 //                    newApmt.setText("       " + name);
 
-                    switch(position) {
-                        case 0:
-                            timeSlots[position]="8:00" + "       " + name;
-                            break;
-                        case 1:
-                            timeSlots[position]="8:30" + "       " + name;
-                            break;
-                        case 2:
-                            timeSlots[position]="9:00" + "       " + name;
-                            break;
-                        case 3:
-                            timeSlots[position]="9:30" + "       " + name;
-                            break;
-                        case 4:
-                            timeSlots[position]="10:00" + "       " + name;
-                            break;
-                        case 5:
-                            timeSlots[position]="10:30" + "       " + name;
-                            break;
-                        case 6:
-                            timeSlots[position]="11:00" + "       " + name;
-                            break;
-                        case 7:
-                            timeSlots[position]="11:30" + "       " + name;
-                            break;
-                        case 8:
-                            timeSlots[position]="12:00" + "       " + name;
-                            break;
-                        case 9:
-                            timeSlots[position]="12:30" + "       " + name;
-                            break;
-                        case 10:
-                            timeSlots[position]="1:00" + "       " + name;
-                            break;
-                        case 11:
-                            timeSlots[position]="1:30" + "       " + name;
-                            break;
-                        case 12:
-                            timeSlots[position]="2:00" + "       " + name;
-                            break;
-                        case 13:
-                            timeSlots[position]="2:30" + "       " + name;
-                            break;
-                        case 14:
-                            timeSlots[position]="3:00" + "       " + name;
-                            break;
-                        case 15:
-                            timeSlots[position]="3:30" + "       " + name;
-                            break;
-                        case 16:
-                            timeSlots[position]="4:00" + "       " + name;
-                            break;
-                        case 17:
-                            timeSlots[position]="4:30" + "       " + name;
-                            break;
-                        case 18:
-                            timeSlots[position]="5:00" + "       " + name;
-                            break;
-                    };
-                    apmtTimesAdptr.notifyDataSetChanged();
-                    testo();  // test service
+
+//                    apmtTimesAdptr.notifyDataSetChanged();
+//                    testo();  // test service
 
                     // responseListener is a PARAMETER of BookingRequest()
                     Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -412,6 +420,7 @@ public class BookingActivity extends AppCompatActivity {
         schdlTimesAdptr = new ArrayAdapter<String>(this, R.layout.item, R.id.apmtTimeSlotsView, schedule);
         final ListView apmtTimesView = (ListView) findViewById(R.id.timeSlotsView);
         apmtTimesView.setAdapter(schdlTimesAdptr);
+        apmtTimesAdptr.notifyDataSetChanged();
     }
 
 }
