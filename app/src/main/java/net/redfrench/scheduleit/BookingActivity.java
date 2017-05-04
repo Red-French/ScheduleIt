@@ -38,6 +38,7 @@ public class BookingActivity extends AppCompatActivity {
     CalendarView calendar;
     ArrayList<String> apmtTimeSlots;
     ArrayAdapter<String> apmtTimesAdptr;
+    ArrayAdapter<String> schdlTimesAdptr;
 //    String dayOfAppointment;
     String appointmentDate;
     String chosenMonth;
@@ -45,8 +46,8 @@ public class BookingActivity extends AppCompatActivity {
     int chosenDayforUserMsg;
     JSONObject json = null;
 
-    private JSONArray result;
-    public ArrayList<String> schedule;
+//    private JSONArray result;
+    public ArrayList<String> schedule = new ArrayList<>();
 
 
     @Override
@@ -201,6 +202,7 @@ public class BookingActivity extends AppCompatActivity {
 //                            boolean success = successMsg.getBoolean("success");  // TODO: get success msg from GetSchedule.php
 
                             JSONArray results = new JSONArray(response);// get 'response' string Volley has given back; 'response' was encoded into JSON string in Booking.php
+
 //                            System.out.println(results.length());
 //                            for (int i=0; i<results.length(); i++) {
 //                                JSONObject obj = results.getJSONObject(i);
@@ -233,7 +235,7 @@ public class BookingActivity extends AppCompatActivity {
                 queue.add(scheduleRequest);
             }
 
-            private void getSchedule(JSONArray daysSchedule) {
+            public void getSchedule(JSONArray daysSchedule) {
 //                Log.v("LOG_SCDL", daysSchedule.toString());
                 for (int i = 0; i < daysSchedule.length(); i++) {
                     try {
@@ -243,12 +245,20 @@ public class BookingActivity extends AppCompatActivity {
                         while (keys.hasNext()) {
                             String key = keys.next();
                             System.out.println("Time: " + key + " - " + theSchdl.get(key));
+                            String thisTimeSlot = key + " - " + theSchdl.get(key);
+                            schedule.add(thisTimeSlot);
+                            loadSchedule();
+//                            System.out.println("schedule =" + schedule);
+//                            apmtTimeSlots.add(key);
+//                            apmtTimeSlots.add((String) theSchdl.get(key));
+//                            timeSlots[i] = key;
                         }
+//                        System.out.println("timeslots array =" + apmtTimeSlots);
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-
             }
         });
 
@@ -267,9 +277,8 @@ public class BookingActivity extends AppCompatActivity {
                 "5:00"
         };
 
-
         //  ********** LOAD ALL APPOINTMENT TIMES INTO VIEW **********
-        apmtTimeSlots = new ArrayList<String>(Arrays.asList(timeSlots));
+//        apmtTimeSlots = new ArrayList<String>(Arrays.asList(timeSlots));
         apmtTimesAdptr = new ArrayAdapter<String>(this, R.layout.item, R.id.apmtTimeSlotsView, timeSlots);
         final ListView apmtTimesView = (ListView) findViewById(R.id.timeSlotsView);
         apmtTimesView.setAdapter(apmtTimesAdptr);
@@ -280,8 +289,8 @@ public class BookingActivity extends AppCompatActivity {
             new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String timeIndexClicked = String.valueOf(parent.getItemIdAtPosition(position));
-                    String chosenTime = String.valueOf(parent.getItemAtPosition(position));  // sent to database; also for user message
+                    String timeIndexClicked = String.valueOf(parent.getItemIdAtPosition(position));  // get reference to clicked item
+                    String chosenTime = String.valueOf(parent.getItemAtPosition(position));  // gets sent to database; also used in user message
 //                    Toast.makeText(BookingActivity.this, timeIndexClicked, Toast.LENGTH_SHORT).show();
                     Toast.makeText(BookingActivity.this, "You're appointment is set for " + appointmentDate + " at " + chosenTime, Toast.LENGTH_LONG).show();
 
@@ -396,6 +405,13 @@ public class BookingActivity extends AppCompatActivity {
                 }
             }
         );
+    }
+
+
+    public void loadSchedule() {
+        schdlTimesAdptr = new ArrayAdapter<String>(this, R.layout.item, R.id.apmtTimeSlotsView, schedule);
+        final ListView apmtTimesView = (ListView) findViewById(R.id.timeSlotsView);
+        apmtTimesView.setAdapter(schdlTimesAdptr);
     }
 
 }
