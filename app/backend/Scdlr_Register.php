@@ -1,18 +1,20 @@
 <?php
-    // $con = mysqli_connect("my_host", "my_user", "my_password", "my_database");
-    $con = mysqli_connect("localhost", "id1157462_unclefatty", "000webhost2017", "id1157462_scheduler");
+  include "dbconfig.php";
 
-    $name = $_POST["name"];  // Android wll pass name, age, username, and password
-    $username = $_POST["username"];
-    $password = $_POST["password"];
+  $con = mysqli_connect($hostname, $username, $password, $database) or
+  trigger_error(mysql_error(),E_USER_ERROR);
 
-    // insert info above into the table
-    $statement = mysqli_prepare($con, "INSERT INTO auth (name, username, password) VALUES (?, ?, ?)");
-    mysqli_stmt_bind_param($statement, "sss", $name, $username, $password);
-    mysqli_stmt_execute($statement);
+  $name = $_POST["name"];  // Android wll pass name, age, username, and password
+  $username = $_POST["username"];
+  $password = $_POST["password"];
 
-    $response = array();
-    $response["success"] = true;
+  // insert info above into the table
+  $statement = mysqli_prepare($con, "INSERT INTO auth (name, username, password) VALUES (?, ?, ?)");
+  mysqli_stmt_bind_param($statement, "sss", $name, $username, $password);
+  mysqli_stmt_execute($statement);
 
-    echo json_encode($response);  // gets turned into JSONobject in RegisterActivity.java
+  $response = array();
+  $response["success"] = true;
+
+  echo json_encode($response);  // gets turned into JSONobject in RegisterActivity.java
 ?>
