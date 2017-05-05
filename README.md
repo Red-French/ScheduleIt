@@ -15,5 +15,4 @@ An app for scheduling office appointments.
 * Canceling appointment
 * Auto-email generation pre-appointment
 
-![Image of scheduleIt]
-(http://www.redfrench.net/img/scheduleIt.png)
+![Image of scheduleIt](http://www.redfrench.net/img/scheduleIt.png)
