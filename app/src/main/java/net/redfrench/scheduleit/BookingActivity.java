@@ -40,6 +40,7 @@ public class BookingActivity extends AppCompatActivity {
     ArrayAdapter<String> apmtTimesAdptr;
     ArrayAdapter<String> schdlTimesAdptr;
 //    String dayOfAppointment;
+    String name;
     String appointmentDate;
     String chosenMonth;
     String chosenDay;
@@ -68,7 +69,7 @@ public class BookingActivity extends AppCompatActivity {
         final TextView welcomeMsg = (TextView) findViewById(R.id.tvWelcome);
 
         Intent intent = getIntent();
-        final String name = intent.getStringExtra("name");
+        name = intent.getStringExtra("name");
 
         String greeting = "Hello, " + name + "!";
         String bookMsg = "\n Choose a date to see available times below.";
@@ -191,76 +192,13 @@ public class BookingActivity extends AppCompatActivity {
                 month = month + 1;
                 appointmentDate = month + "/" + dayOfMonth;  // for user message
 
+                requestSchedule();
 
-                Response.Listener<String> responseListener = new Response.Listener<String>() {
-
-                    // below happens inside GetSchedule.php when the response has been executed
-                    @Override
-                    public void onResponse(String response) {  // 'response' is the boolean response from GetSchedule.php (volley provides this response)
-                        try {
-//                            JSONObject successMsg = new JSONObject(response);
-//                            boolean success = successMsg.getBoolean("success");  // TODO: get success msg from GetSchedule.php
-
-                            JSONArray results = new JSONArray(response);// get 'response' string Volley has given back; 'response' was encoded into JSON string in Booking.php
-
-//                            System.out.println(results.length());
-//                            for (int i=0; i<results.length(); i++) {
-//                                JSONObject obj = results.getJSONObject(i);
-//                                System.out.println(obj);
-                                schedule.clear();
-                                getSchedule(results);
-//                            }
-
-                            if(true) {  // TODO: get success msg from GetSchedule.php and check here
-                                AlertDialog.Builder builder = new AlertDialog.Builder(BookingActivity.this);
-                                builder.setMessage("Schedule retrieval success")
-                                        .setNegativeButton("Retry", null)
-                                        .create()
-                                        .show();
-                            } else {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(BookingActivity.this);
-                                builder.setMessage("Schedule retrieval failed")
-                                        .setNegativeButton("Retry", null)
-                                        .create()
-                                        .show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                };
-
-                ScheduleRequest scheduleRequest = new ScheduleRequest(name, chosenMonth, chosenDay, responseListener);
-                RequestQueue queue = Volley.newRequestQueue(BookingActivity.this);
-                Log.v("scheduleRequest", String.valueOf(scheduleRequest));
-                queue.add(scheduleRequest);
             }
 
-            public void getSchedule(JSONArray daysSchedule) {
-//                Log.v("LOG_SCDL", daysSchedule.toString());
-                for (int i = 0; i < daysSchedule.length(); i++) {
-                    try {
-                        JSONObject theSchdl = daysSchedule.getJSONObject(i);
-                        Iterator<String> keys = theSchdl.keys();
 
-                        while (keys.hasNext()) {
-                            String key = keys.next();
-                            System.out.println("Time: " + key + " - " + theSchdl.get(key));
-                            String thisTimeSlot = key + "       " + theSchdl.get(key);
-                            schedule.add(thisTimeSlot);
-                            loadSchedule();
-//                            System.out.println("schedule =" + schedule);
-//                            apmtTimeSlots.add(key);
-//                            apmtTimeSlots.add((String) theSchdl.get(key));
-//                            timeSlots[i] = key;
-                        }
-//                        System.out.println("timeslots array =" + apmtTimeSlots);
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+
         });
 
 
@@ -410,17 +348,90 @@ public class BookingActivity extends AppCompatActivity {
                     RequestQueue queue = Volley.newRequestQueue(BookingActivity.this);
                     Log.v("bookingRequest", String.valueOf(bookingRequest));
                     queue.add(bookingRequest);
+Log.v("LOG", "before calling loadSchedule()");
+                    requestSchedule();
                 }
             }
         );
     }
 
+    public void requestSchedule() {
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+
+            // below happens inside GetSchedule.php when the response has been executed
+            @Override
+            public void onResponse(String response) {  // 'response' is the boolean response from GetSchedule.php (volley provides this response)
+                try {
+//                            JSONObject successMsg = new JSONObject(response);
+//                            boolean success = successMsg.getBoolean("success");  // TODO: get success msg from GetSchedule.php
+
+                    JSONArray results = new JSONArray(response);// get 'response' string Volley has given back; 'response' was encoded into JSON string in Booking.php
+
+//                            System.out.println(results.length());
+//                            for (int i=0; i<results.length(); i++) {
+//                                JSONObject obj = results.getJSONObject(i);
+//                                System.out.println(obj);
+                    schedule.clear();
+                    getSchedule(results);
+//                            }
+
+                    if(true) {  // TODO: get success msg from GetSchedule.php and check here
+                        AlertDialog.Builder builder = new AlertDialog.Builder(BookingActivity.this);
+                        builder.setMessage("Schedule retrieval success")
+                                .setNegativeButton("Retry", null)
+                                .create()
+                                .show();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(BookingActivity.this);
+                        builder.setMessage("Schedule retrieval failed")
+                                .setNegativeButton("Retry", null)
+                                .create()
+                                .show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        ScheduleRequest scheduleRequest = new ScheduleRequest(name, chosenMonth, chosenDay, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(BookingActivity.this);
+        Log.v("scheduleRequest", String.valueOf(scheduleRequest));
+        queue.add(scheduleRequest);
+    }
+
+    public void getSchedule(JSONArray daysSchedule) {
+//                Log.v("LOG_SCDL", daysSchedule.toString());
+        for (int i = 0; i < daysSchedule.length(); i++) {
+            try {
+                JSONObject theSchdl = daysSchedule.getJSONObject(i);
+                Iterator<String> keys = theSchdl.keys();
+
+                while (keys.hasNext()) {
+                    String key = keys.next();
+                    System.out.println("Time: " + key + " - " + theSchdl.get(key));
+                    String thisTimeSlot = key + "       " + theSchdl.get(key);
+                    schedule.add(thisTimeSlot);
+                    loadSchedule();
+//                            System.out.println("schedule =" + schedule);
+//                            apmtTimeSlots.add(key);
+//                            apmtTimeSlots.add((String) theSchdl.get(key));
+//                            timeSlots[i] = key;
+                }
+//                        System.out.println("timeslots array =" + apmtTimeSlots);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public void loadSchedule() {
+        Log.v("LOG", "inside loadSchedule");
         schdlTimesAdptr = new ArrayAdapter<String>(this, R.layout.item, R.id.apmtTimeSlotsView, schedule);
         final ListView apmtTimesView = (ListView) findViewById(R.id.timeSlotsView);
         apmtTimesView.setAdapter(schdlTimesAdptr);
-        apmtTimesAdptr.notifyDataSetChanged();
+        schdlTimesAdptr.notifyDataSetChanged();
     }
 
 }
