@@ -13,6 +13,8 @@ An app for scheduling office appointments.
 ### Some features to come include:
 * Changing appointment
 * Canceling appointment
+* client search for booked appointments
+* 2 flavors (client and admin)
 * Auto-email generation pre-appointment
 
 ![Image of scheduleIt](http://www.redfrench.net/img/scheduleIt.png)
