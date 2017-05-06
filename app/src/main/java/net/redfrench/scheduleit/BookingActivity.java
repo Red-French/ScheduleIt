@@ -60,6 +60,10 @@ public class BookingActivity extends AppCompatActivity {
         final Calendar cal = Calendar.getInstance();
 //        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
         final long time = cal.getTimeInMillis();
+        cal.add(Calendar.MONTH, 1);
+        cal.set(Calendar.DAY_OF_MONTH,cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        final long nextMonth = cal.getTimeInMillis();
+
 
 //        String currentDate = java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
 //        dayOfAppointment = currentDate;
@@ -85,6 +89,7 @@ public class BookingActivity extends AppCompatActivity {
         //  ********** CALENDAR **********
         calendar = (CalendarView) findViewById(R.id.calendar);
         calendar.setMinDate(time);
+        calendar.setMaxDate(nextMonth);
 
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
