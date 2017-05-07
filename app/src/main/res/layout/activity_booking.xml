@@ -7,34 +7,12 @@
     android:layout_height="match_parent"
     tools:context="net.redfrench.scheduleit.BookingActivity">
 
-    <TextView
-        android:id="@+id/tvGreeting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="0dp"
-        android:layout_marginTop="10dp"
-        android:text="greetings"
-        android:textSize="18sp"/>
-
-    <TextView
-        android:id="@+id/tvWelcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:text="Click a date and time, then confirm"
-        android:textSize="14sp"
-        android:layout_below="@id/tvGreeting"
-        android:layout_centerHorizontal="true"/>
-
     <ScrollView
         android:id="@+id/calScroll"
+        android:layout_alignParentTop="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/tvWelcome">
+        android:layout_centerHorizontal="true">
         <CalendarView
             android:id="@+id/calendar"
             android:layout_width="wrap_content"
@@ -42,11 +20,21 @@
             android:layout_centerHorizontal="true"/>
     </ScrollView>
 
+    <TextView
+        android:id="@+id/tvChosenDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimary"
+        android:layout_below="@id/calScroll"/>
+
     <ListView
         android:id="@+id/timeSlotsView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/calScroll"
-        />
+        android:layout_below="@id/tvChosenDate"/>
 
 </RelativeLayout>
