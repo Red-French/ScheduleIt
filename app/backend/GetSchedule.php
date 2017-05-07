@@ -22,12 +22,12 @@
       // array_push($result[$apmtTime]=$patient);  // prints whole month
 
       if ($n == 19) {
-        $response["success"] = true;
+        // $response["success"] = true;
         echo json_encode($result);
       }
     }
   } else {
-    echo "No results.";
+    echo "false";
   }
 
 ?>
