@@ -1,6 +1,5 @@
 package net.redfrench.scheduleit;
 
-import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,7 +23,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
-//import java.util.function.ToDoubleBiFunction;
 
 
 public class BookingActivity extends AppCompatActivity {
@@ -38,8 +36,6 @@ public class BookingActivity extends AppCompatActivity {
     String appointmentDate;
     String chosenMonth;
     String chosenDay;
-    int chosenDayforUserMsg;
-    JSONObject json = null;
 
     public ArrayList<String> schedule = new ArrayList<>();
 
@@ -60,15 +56,12 @@ public class BookingActivity extends AppCompatActivity {
         final long nextMonth = cal.getTimeInMillis();  // for setMaxDate() on calendar
 
 
-        //  ********** GREETING & MSG **********
+        //  ********** GREET USER **********
         final TextView userMsgArea = (TextView) findViewById(R.id.tvChosenDate);
-
-        Intent intent = getIntent();
-        name = intent.getStringExtra("name");
-
+        name = getIntent().getStringExtra("name");
         String greeting = "Hello, " + name + "!";
-
         userMsgArea.setText(greeting);
+
         // if () // if user already booked, show their appointment and ask if they want to change or cancel
 //        welcomeMsg.setText(bookMsg);
 //            else if //
@@ -84,7 +77,6 @@ public class BookingActivity extends AppCompatActivity {
 
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, final int dayOfMonth) {
-                chosenDayforUserMsg = dayOfMonth;
                 switch (month) {
                     case 0:  chosenMonth = "january";
                         break;
@@ -178,7 +170,7 @@ public class BookingActivity extends AppCompatActivity {
                 }
                 month = month + 1;
                 appointmentDate = month + "/" + dayOfMonth;  // for user message
-
+                Toast.makeText(BookingActivity.this, "Just a moment.", Toast.LENGTH_SHORT).show();
                 requestSchedule();
             }
 
@@ -277,7 +269,6 @@ public class BookingActivity extends AppCompatActivity {
                     };
 
                     final String apmtTime = chosenTime;
-//                    testo();  // test service
 
 
                     Response.Listener<String> responseListener = new Response.Listener<String>() {  // responseListener is a PARAMETER of BookingRequest()
@@ -295,9 +286,6 @@ public class BookingActivity extends AppCompatActivity {
                                            .create()
                                            .show();
 
-                                    // confirm appointment is set to the user with toast
-//                                    Toast.makeText(BookingActivity.this, "You're appointment is set for " + appointmentDate + " at " + apmtTime, Toast.LENGTH_LONG).show();
-
                                     requestSchedule();
 
                                 } else {
@@ -307,8 +295,8 @@ public class BookingActivity extends AppCompatActivity {
                                            .create()
                                            .show();
 
-                                    TextView apmtBook = (TextView) findViewById(R.id.tvChosenDate);
-                                    apmtBook.setText("Oops. That didn't work. Try again or call 790-0000.");
+                                    TextView userMsgText = (TextView) findViewById(R.id.tvChosenDate);
+                                    userMsgText.setText("Oops. That didn't work. Try again or call 790-0000.");
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -339,18 +327,12 @@ public class BookingActivity extends AppCompatActivity {
 //                    System.out.println(response);
                     JSONArray results = new JSONArray(response);// get 'response' string Volley has given back; 'response' was encoded into JSON string in Booking.php
 
-                    // set chosen date in TextView
-                    TextView apmtBook = (TextView) findViewById(R.id.tvChosenDate);
-                    apmtBook.setText("Appointments for " + appointmentDate);
-
                     schedule.clear();
-                    getSchedule(results);
+                    parseSchedule(results);
 
-//                        AlertDialog.Builder builder = new AlertDialog.Builder(BookingActivity.this);
-//                        builder.setMessage("Schedule retrieval success")
-//                               .setNegativeButton("Retry", null)
-//                               .create()
-//                               .show();
+                    // set chosen date in TextView
+                    TextView userMsg = (TextView) findViewById(R.id.tvChosenDate);
+                    userMsg.setText("Appointments for " + appointmentDate);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -361,7 +343,7 @@ public class BookingActivity extends AppCompatActivity {
                            .show();
 
                     schedule.clear();
-                    loadSchedule();
+                    loadSchedule();  // load blank schedule
                 }
             }
         };
@@ -372,7 +354,7 @@ public class BookingActivity extends AppCompatActivity {
         queue.add(scheduleRequest);
     }
 
-    public void getSchedule(JSONArray daysSchedule) {
+    public void parseSchedule(JSONArray daysSchedule) {
         for (int i = 0; i < daysSchedule.length(); i++) {
             try {
                 JSONObject theSchdl = daysSchedule.getJSONObject(i);
@@ -383,8 +365,10 @@ public class BookingActivity extends AppCompatActivity {
 //                    System.out.println("Time: " + key + " - " + theSchdl.get(key));
                     String thisTimeSlot = key + "       " + theSchdl.get(key);
                     schedule.add(thisTimeSlot);
-                    loadSchedule();
                 }
+
+                loadSchedule();
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
