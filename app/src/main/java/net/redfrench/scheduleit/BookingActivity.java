@@ -36,6 +36,7 @@ public class BookingActivity extends AppCompatActivity {
     String appointmentDate;
     String chosenMonth;
     String chosenDay;
+    String chosenTime;
 
     public ArrayList<String> schedule = new ArrayList<>();
 
@@ -206,7 +207,7 @@ public class BookingActivity extends AppCompatActivity {
                     Toast.makeText(BookingActivity.this, "Please wait for confirmation.", Toast.LENGTH_LONG).show();
                     int timeIndexClicked = (int)parent.getItemIdAtPosition(position);  // get reference to clicked item
 
-                    String chosenTime = "";
+                    chosenTime = "";
 
                     switch(timeIndexClicked) {
                         case 0:
@@ -267,9 +268,7 @@ public class BookingActivity extends AppCompatActivity {
                             chosenTime = "5:00";
                             break;
                     };
-
-                    final String apmtTime = chosenTime;
-
+                    
 
                     Response.Listener<String> responseListener = new Response.Listener<String>() {  // responseListener is a PARAMETER of BookingRequest()
 
@@ -278,25 +277,18 @@ public class BookingActivity extends AppCompatActivity {
                         public void onResponse(String response) {  // 'response' is the boolean response from Booking.php (volley provides this response)
                             try {
                                 JSONObject jsonResponse = new JSONObject(response);  // gets 'response' string Volley has given back; 'response' was encoded into JSON string in Booking.php
-                                boolean success = jsonResponse.getBoolean("success");  // 'success' given a boolean value in Booking.php
-                                if(success) {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(BookingActivity.this);
-                                    builder.setMessage("You're appointment is set for " + appointmentDate + " at " + apmtTime)
-                                           .setNegativeButton("OK", null)
-                                           .create()
-                                           .show();
+                                boolean available = jsonResponse.getBoolean("available");  // 'success' given a boolean value in Booking.php
+                                if(available) {
 
-                                    requestSchedule();
+                                    bookIt();
 
                                 } else {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(BookingActivity.this);
-                                    builder.setMessage("Booking failed")
-                                           .setNegativeButton("Please retry", null)
-                                           .create()
-                                           .show();
+                                    builder.setMessage("Sorry, but that time is taken.")
+                                            .setNegativeButton("Please retry", null)
+                                            .create()
+                                            .show();
 
-                                    TextView userMsgText = (TextView) findViewById(R.id.tvChosenDate);
-                                    userMsgText.setText("Oops. That didn't work. Try again or call 790-0000.");
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -304,11 +296,10 @@ public class BookingActivity extends AppCompatActivity {
                         }
                     };
 
-
-                    BookingRequest bookingRequest = new BookingRequest(name, chosenMonth, chosenDay, chosenTime, responseListener);
+                    CheckScheduleRequest checkedRequest = new CheckScheduleRequest(name, chosenMonth, chosenDay, chosenTime, responseListener);
                     RequestQueue queue = Volley.newRequestQueue(BookingActivity.this);
-                    Log.v("bookingRequest", String.valueOf(bookingRequest));
-                    queue.add(bookingRequest);
+                    Log.v("check schedule reqst", String.valueOf(checkedRequest));
+                    queue.add(checkedRequest);
 
                 }  // end onItemClick()
             }  // end OnItemClickListener()
@@ -316,6 +307,46 @@ public class BookingActivity extends AppCompatActivity {
 
     }  // end onCreate()
 
+
+    public void bookIt() {
+        Response.Listener<String> responseListener = new Response.Listener<String>() {  // responseListener is a PARAMETER of BookingRequest()
+
+            // below happens when response has been executed
+            @Override
+            public void onResponse(String response) {  // 'response' is the boolean response from Booking.php (volley provides this response)
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);  // gets 'response' string Volley has given back; 'response' was encoded into JSON string in Booking.php
+                    boolean success = jsonResponse.getBoolean("success");  // 'success' given a boolean value in Booking.php
+                    if(success) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(BookingActivity.this);
+                        builder.setMessage("You're appointment is set for " + appointmentDate + " at " + chosenTime)
+                                .setNegativeButton("OK", null)
+                                .create()
+                                .show();
+
+                        requestSchedule();
+
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(BookingActivity.this);
+                        builder.setMessage("Booking failed")
+                                .setNegativeButton("Please retry", null)
+                                .create()
+                                .show();
+
+                        TextView userMsgText = (TextView) findViewById(R.id.tvChosenDate);
+                        userMsgText.setText("Oops. That didn't work. Try again or call 790-0000.");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        BookingRequest bookingRequest = new BookingRequest(name, chosenMonth, chosenDay, chosenTime, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(BookingActivity.this);
+        Log.v("bookingRequest", String.valueOf(bookingRequest));
+        queue.add(bookingRequest);
+    }
 
     public void requestSchedule() {
         Response.Listener<String> responseListener = new Response.Listener<String>() {
