@@ -1,9 +1,14 @@
 package net.redfrench.scheduleit;
 
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -45,6 +50,8 @@ public class BookingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booking);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
 
         //  ********** INITIALIZE CALENDAR **********
@@ -307,6 +314,33 @@ public class BookingActivity extends AppCompatActivity {
 
     }  // end onCreate()
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.myAppointments) {
+            Intent intent = new Intent(this, MyAppointmentsActivity.class);
+            startActivity(intent);
+        }
+//        else if (id == R.id.balance) {
+//            Intent intent = new Intent(this, );
+//            startActivity(intent);
+//        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     public void bookIt() {
         Response.Listener<String> responseListener = new Response.Listener<String>() {  // responseListener is a PARAMETER of BookingRequest()
@@ -412,5 +446,9 @@ public class BookingActivity extends AppCompatActivity {
         apmtTimesView.setAdapter(schdlTimesAdptr);
         schdlTimesAdptr.notifyDataSetChanged();
     }
+
+//    public void forceCrash(View view) {
+//        throw new RuntimeException("This is a crash");
+//    }
 
 }
