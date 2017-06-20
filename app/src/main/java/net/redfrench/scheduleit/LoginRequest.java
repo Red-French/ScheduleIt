@@ -15,8 +15,8 @@ public class LoginRequest extends StringRequest{
     public LoginRequest(String username, String password, Response.Listener<String> listener) {
 
         // pass data to Volley (below explains parameters of super())
-        // 1. Method.POST sends data to REGISTER_REQUEST_URL
-        // 2. REGISTER_REQUEST_URL returns data
+        // 1. Method.POST sends data to LOGIN_REQUEST_URL
+        // 2. LOGIN_REQUEST_URL returns data
         // 3. listener: when Volley is finished with the request, it will inform the listener
         // 4. null: error handling would be here
         super(Request.Method.POST, LOGIN_REQUEST_URL, listener, null);
