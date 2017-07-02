@@ -21,7 +21,14 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_my_appointments"/>
+    <!--<include layout="@layout/content_my_appointments"/>-->
+
+    <TextView
+        android:id="@+id/tvUserInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:text="TextView"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
