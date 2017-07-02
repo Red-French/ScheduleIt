@@ -38,7 +38,7 @@ public class BookingActivity extends AppCompatActivity {
     ArrayAdapter<String> schdlTimesAdptr;
 
     String name;
-    String appointmentDate;
+    public String appointmentDate;
     String chosenMonth;
     String chosenDay;
     String chosenTime;
@@ -57,8 +57,7 @@ public class BookingActivity extends AppCompatActivity {
         //  ********** INITIALIZE CALENDAR **********
         final Calendar cal = Calendar.getInstance();
 
-        final long time = cal.getTimeInMillis();  // for setMinDate() on calendar
-
+        final long currentTime = cal.getTimeInMillis();  // for setMinDate() on calendar
         cal.add(Calendar.MONTH, 1);
         cal.set(Calendar.DAY_OF_MONTH,cal.getActualMaximum(Calendar.DAY_OF_MONTH));
         final long nextMonth = cal.getTimeInMillis();  // for setMaxDate() on calendar
@@ -78,7 +77,7 @@ public class BookingActivity extends AppCompatActivity {
 
         //  ********** CALENDAR **********
         calendar = (CalendarView) findViewById(R.id.calendar);
-        calendar.setMinDate(time);
+        calendar.setMinDate(currentTime);
         calendar.setMaxDate(nextMonth);
 
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -153,7 +152,7 @@ public class BookingActivity extends AppCompatActivity {
                         break;
                     case 20:  chosenDay = "twenty";
                         break;
-                    case 21:  chosenDay = "twnetyone";
+                    case 21:  chosenDay = "twentyone";
                         break;
                     case 22: chosenDay = "twentytwo";
                         break;
@@ -281,10 +280,10 @@ public class BookingActivity extends AppCompatActivity {
 
                         // below happens when response has been executed
                         @Override
-                        public void onResponse(String response) {  // 'response' is the boolean response from Booking.php (volley provides this response)
+                        public void onResponse(String response) {  // 'response' is the boolean response from CheckSchedule.php (volley provides this response)
                             try {
-                                JSONObject jsonResponse = new JSONObject(response);  // gets 'response' string Volley has given back; 'response' was encoded into JSON string in Booking.php
-                                boolean available = jsonResponse.getBoolean("available");  // 'success' given a boolean value in Booking.php
+                                JSONObject jsonResponse = new JSONObject(response);  // gets 'response' string Volley has given back; 'response' was encoded into JSON string in CheckSchedule.php
+                                boolean available = jsonResponse.getBoolean("available");  // 'success' given a boolean value in CheckSchedule.php
                                 if(available) {
 
                                     bookIt();
@@ -331,13 +330,16 @@ public class BookingActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.myAppointments) {
             Intent intent = new Intent(this, MyAppointmentsActivity.class);
+            intent.putExtra("name", name);
+            intent.putExtra("chosenMonth", chosenMonth);
+
             startActivity(intent);
         }
 //        else if (id == R.id.balance) {
 //            Intent intent = new Intent(this, );
 //            startActivity(intent);
 //        }
-
+//
         return super.onOptionsItemSelected(item);
     }
 
@@ -390,7 +392,7 @@ public class BookingActivity extends AppCompatActivity {
             public void onResponse(String response) {  // 'response' is the boolean response from GetSchedule.php (volley provides this response)
                 try {
 //                    System.out.println(response);
-                    JSONArray results = new JSONArray(response);// get 'response' string Volley has given back; 'response' was encoded into JSON string in Booking.php
+                    JSONArray results = new JSONArray(response);// get 'response' string Volley has given back; 'response' was encoded into JSON string in GetSchedule.php
 
                     schedule.clear();
                     parseSchedule(results);
