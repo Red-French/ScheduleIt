@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
                             JSONObject jsonResponse = new JSONObject(response);
                             boolean success = jsonResponse.getBoolean("success");
 
-                            if (success) {  // get details from jsonResponse and send data to UserAreaActivity
+                            if (success) {  // get details from jsonResponse and send data to BookingActivity
                                 String name = jsonResponse.getString("name");
                                 String uname = jsonResponse.getString("username");
 
