@@ -22,7 +22,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.SQLOutput;
 import java.util.Calendar;
+import java.util.Iterator;
 
 public class MyAppointmentsActivity extends AppCompatActivity {
     String name;
@@ -67,28 +69,28 @@ public class MyAppointmentsActivity extends AppCompatActivity {
         return true;
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.myAppointments) {
-//            Intent intent = new Intent(this, MyAppointmentsActivity.class);
-//            intent.putExtra("name", name);
-//            intent.putExtra("chosenMonth", chosenMonth);
-//
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.myAppointments) {
+            Intent intent = new Intent(this, MyAppointmentsActivity.class);
+            intent.putExtra("name", name);
+            intent.putExtra("chosenMonth", chosenMonth);
+
+            startActivity(intent);
+        }
+//        else if (id == R.id.balance) {
+//            Intent intent = new Intent(this, );
 //            startActivity(intent);
 //        }
-////        else if (id == R.id.balance) {
-////            Intent intent = new Intent(this, );
-////            startActivity(intent);
-////        }
-////
-//        return super.onOptionsItemSelected(item);
-//    }
+//
+        return super.onOptionsItemSelected(item);
+    }
 
     public void requestPatientSchedule() {
         Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -98,19 +100,24 @@ public class MyAppointmentsActivity extends AppCompatActivity {
             public void onResponse(String response) {  // 'response' is the boolean response from GetSchedule.php (volley provides this response)
 
                 try {
-                    JSONObject jsonResponse = new JSONObject(response);  // gets 'response' string Volley has given back; 'response' was encoded into JSON string in Booking.php
-                    boolean available = jsonResponse.getBoolean("available");  // 'success' given a boolean value in Booking.php
+                    JSONArray results = new JSONArray(response);
+                    System.out.println("results are " + results);
+                    parseSchedule(results);
+
+//                    JSONObject jsonResponse = new JSONObject(response);  // gets 'response' string Volley has given back; 'response' was encoded into JSON string in Booking.php
+//                    boolean isAvailable = jsonResponse.getBoolean("available");  // 'success' given a boolean value in Booking.php
+//                      System.out.println("isAvailable = " + isAvailable);
 //                    System.out.println("response is below:");
 //                    System.out.println(response);
-                    JSONArray results = new JSONArray(response);// get 'response' string Volley has given back; 'response' was encoded into JSON string in Booking.php
+//                    JSONArray results = new JSONArray(response);// get 'response' string Volley has given back; 'response' was encoded into JSON string in Booking.php
 
 //                    bookingActivity.schedule.clear();
 //                    bookingActivity.parseSchedule(results);
 
                     // set chosen date in TextView
-                    System.out.println("ABOUT TO SET TEXT!!!");
-                    TextView userInfo = (TextView) findViewById(R.id.tvUserInfo);
-                    userInfo.setText("Replaced text!!");
+                    System.out.println("YOU ARE HERE!!!");
+//                     TextView userInfo = (TextView) findViewById(R.id.tvUserInfo);
+//                     userInfo.setText("Replaced text!!");
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -132,6 +139,35 @@ public class MyAppointmentsActivity extends AppCompatActivity {
         System.out.println("Back from My AppointmentsRequest" + myAppointmentsRequest);
         Log.v("scheduleRequest", String.valueOf(myAppointmentsRequest));
         queue.add(myAppointmentsRequest);
+    }
+
+    public void parseSchedule(JSONArray daysSchedule) {
+        System.out.println("daysSchedule = " + daysSchedule);
+        for (int i = 0; i < daysSchedule.length(); i++) {
+            try {
+                JSONObject theSchdl = daysSchedule.getJSONObject(i);
+                Iterator<String> keys = theSchdl.keys();
+
+                while (keys.hasNext()) {
+                    String key = keys.next();
+                    String thisSchdlName = theSchdl.get(key).toString();
+
+                    if(thisSchdlName.equals(name)) {
+                        System.out.println("Time: " + key + " - " + theSchdl.get(key));
+                        String temp = "Time: " + key + " - " + theSchdl.get(key);
+                        TextView userInfo = (TextView) findViewById(R.id.tvUserInfo);
+                        userInfo.setText(temp + "\n");
+                    }
+//                    String thisTimeSlot = key + "       " + theSchdl.get(key);
+//                    schedule.add(thisTimeSlot);
+                }
+
+//                loadSchedule();
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
