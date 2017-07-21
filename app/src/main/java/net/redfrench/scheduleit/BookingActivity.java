@@ -284,16 +284,25 @@ public class BookingActivity extends AppCompatActivity {
                             try {
                                 JSONObject jsonResponse = new JSONObject(response);  // gets 'response' string Volley has given back; 'response' was encoded into JSON string in CheckSchedule.php
                                 boolean available = jsonResponse.getBoolean("available");  // 'success' given a boolean value in CheckSchedule.php
+
+//                                Iterator x = jsonResponse.keys();
+//                                JSONArray jsonArray = new JSONArray();
+//                                while (x.hasNext()){
+//                                    String key = (String) x.next();
+//                                    jsonArray.put(jsonResponse.get(key));
+//                                }
+
                                 if(available) {
 
                                     bookIt();
 
                                 } else {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(BookingActivity.this);
-                                    builder.setMessage("Sorry, but that time is taken.")
-                                            .setNegativeButton("Please retry", null)
-                                            .create()
-                                            .show();
+                                    cancel(jsonResponse);
+//                                    AlertDialog.Builder builder = new AlertDialog.Builder(BookingActivity.this);
+//                                    builder.setMessage("Sorry, but that time is taken.")
+//                                            .setNegativeButton("Please retry", null)
+//                                            .create()
+//                                            .show();
 
                                 }
                             } catch (JSONException e) {
@@ -341,6 +350,29 @@ public class BookingActivity extends AppCompatActivity {
 //        }
 //
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void cancel(JSONObject daysSchedule) {
+        System.out.println("INSIDE CANCEL!!!!" + daysSchedule);
+//        for (int i = 0; i < daysSchedule.length(); i++) {
+//            try {
+//                JSONObject theSchdl = daysSchedule.getJSONObject(i);
+//                Iterator<String> keys = theSchdl.keys();
+//
+//                while (keys.hasNext()) {
+//                    String key = keys.next();
+//                    System.out.println("Time: " + key + " - " + theSchdl.get(key));
+////                    String thisTimeSlot = key + "       " + theSchdl.get(key);
+////                    schedule.add(thisTimeSlot);
+//                }
+//
+////                loadSchedule();
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
 
@@ -393,7 +425,6 @@ public class BookingActivity extends AppCompatActivity {
                 try {
 //                    System.out.println(response);
                     JSONArray results = new JSONArray(response);// get 'response' string Volley has given back; 'response' was encoded into JSON string in GetSchedule.php
-
                     schedule.clear();
                     parseSchedule(results);
 
