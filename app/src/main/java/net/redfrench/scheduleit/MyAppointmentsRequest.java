@@ -24,7 +24,6 @@ public class MyAppointmentsRequest extends StringRequest {
         params = new HashMap<>();
         params.put("name", name);  // put data into HashMap
         params.put("chosenMonth", chosenMonth);
-//        params.put("chosenDay", chosenDay);
     }
 
     @Override
