@@ -151,10 +151,37 @@ public class MyAppointmentsActivity extends AppCompatActivity {
     }
 
     public void loadPatientAppointments() {
+        chosenMonth = chosenMonth.toUpperCase();
+        TextView monthHeading = (TextView) findViewById(R.id.tvMonthHeading);
+        monthHeading.setText(chosenMonth);
+
         patientApmtsAdptr = new ArrayAdapter<>(this, R.layout.item, R.id.apmtTimeSlotsView, patientApmts);  // patientApmts is ArrayList
         final ListView apmtTimesView = (ListView) findViewById(R.id.patientApmtView);
         apmtTimesView.setAdapter(patientApmtsAdptr);
         patientApmtsAdptr.notifyDataSetChanged();
+    }
+
+
+    public void cancel(JSONObject daysSchedule) {
+        System.out.println("INSIDE CANCEL!!!!" + daysSchedule);
+//        for (int i = 0; i < daysSchedule.length(); i++) {
+//            try {
+//                JSONObject theSchdl = daysSchedule.getJSONObject(i);
+//                Iterator<String> keys = theSchdl.keys();
+//
+//                while (keys.hasNext()) {
+//                    String key = keys.next();
+//                    System.out.println("Time: " + key + " - " + theSchdl.get(key));
+////                    String thisTimeSlot = key + "       " + theSchdl.get(key);
+////                    schedule.add(thisTimeSlot);
+//                }
+//
+////                loadSchedule();
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
 }
