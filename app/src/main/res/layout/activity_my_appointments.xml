@@ -23,12 +23,12 @@
 
     <!--<include layout="@layout/content_my_appointments"/>-->
 
-    <TextView
-        android:id="@+id/tvUserInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:text="TextView"/>
+    <!--<TextView-->
+        <!--android:id="@+id/tvPatientApmtInfo"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_vertical|center_horizontal"-->
+        <!--android:text="TextView"/>-->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -37,5 +37,14 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_dialog_email"/>
+
+    <ListView
+        android:id="@+id/patientApmtView"
+        android:layout_width="wrap_content"
+        android:layout_height="400dp"
+        android:layout_below="@id/toolbar"
+        android:layout_marginTop="60dp"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"/>
 
 </android.support.design.widget.CoordinatorLayout>

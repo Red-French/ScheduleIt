@@ -2,8 +2,6 @@ package net.redfrench.scheduleit;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,7 +9,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -22,15 +21,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.SQLOutput;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 
 public class MyAppointmentsActivity extends AppCompatActivity {
     String name;
     String chosenMonth;
+    ArrayAdapter<String> patientApmtsAdptr;
 
-    BookingActivity bookingActivity = new BookingActivity();
+    public ArrayList<String> patientApmts = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +47,7 @@ public class MyAppointmentsActivity extends AppCompatActivity {
         final Calendar cal = Calendar.getInstance();
         System.out.println("day of month =  " + cal.get(Calendar.DAY_OF_MONTH));
 
-        TextView userInfo = (TextView) findViewById(R.id.tvUserInfo);
-        userInfo.setText("Summary of upcoming appointments here?");
-
         requestPatientSchedule();
-
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -104,29 +101,13 @@ public class MyAppointmentsActivity extends AppCompatActivity {
                     System.out.println("results are " + results);
                     parseSchedule(results);
 
-//                    JSONObject jsonResponse = new JSONObject(response);  // gets 'response' string Volley has given back; 'response' was encoded into JSON string in Booking.php
-//                    boolean isAvailable = jsonResponse.getBoolean("available");  // 'success' given a boolean value in Booking.php
-//                      System.out.println("isAvailable = " + isAvailable);
-//                    System.out.println("response is below:");
-//                    System.out.println(response);
-//                    JSONArray results = new JSONArray(response);// get 'response' string Volley has given back; 'response' was encoded into JSON string in Booking.php
-
-//                    bookingActivity.schedule.clear();
-//                    bookingActivity.parseSchedule(results);
-
-                    // set chosen date in TextView
-                    System.out.println("YOU ARE HERE!!!");
-//                     TextView userInfo = (TextView) findViewById(R.id.tvUserInfo);
-//                     userInfo.setText("Replaced text!!");
-
                 } catch (JSONException e) {
                     e.printStackTrace();
-//                    AlertDialog.Builder builder = new AlertDialog.Builder(MyAppointmentsActivity.this);
-                    System.out.println("Getting patient appointments failed.");
-//                    builder.setMessage("Schedule retrieval failed")
-//                            .setNegativeButton("Retry", null)
-//                            .create()
-//                            .show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MyAppointmentsActivity.this);
+                    builder.setMessage("Schedule retrieval failed")
+                            .setNegativeButton("Retry", null)
+                            .create()
+                            .show();
 
 //                    bookingActivity.schedule.clear();
 //                    bookingActivity.loadSchedule();  // load blank schedule
@@ -143,6 +124,7 @@ public class MyAppointmentsActivity extends AppCompatActivity {
 
     public void parseSchedule(JSONArray daysSchedule) {
         System.out.println("daysSchedule = " + daysSchedule);
+
         for (int i = 0; i < daysSchedule.length(); i++) {
             try {
                 JSONObject theSchdl = daysSchedule.getJSONObject(i);
@@ -154,20 +136,25 @@ public class MyAppointmentsActivity extends AppCompatActivity {
 
                     if(thisSchdlName.equals(name)) {
                         System.out.println("Time: " + key + " - " + theSchdl.get(key));
-                        String temp = "Time: " + key + " - " + theSchdl.get(key);
-                        TextView userInfo = (TextView) findViewById(R.id.tvUserInfo);
-                        userInfo.setText(temp + "\n");
+                        String thisAppointment = "Time: " + key + " - " + theSchdl.get(key);
+
+                        patientApmts.add(thisAppointment);
                     }
-//                    String thisTimeSlot = key + "       " + theSchdl.get(key);
-//                    schedule.add(thisTimeSlot);
                 }
 
-//                loadSchedule();
+                loadPatientAppointments();
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void loadPatientAppointments() {
+        patientApmtsAdptr = new ArrayAdapter<>(this, R.layout.item, R.id.apmtTimeSlotsView, patientApmts);  // patientApmts is ArrayList
+        final ListView apmtTimesView = (ListView) findViewById(R.id.patientApmtView);
+        apmtTimesView.setAdapter(patientApmtsAdptr);
+        patientApmtsAdptr.notifyDataSetChanged();
     }
 
 }
