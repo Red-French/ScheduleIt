@@ -25,8 +25,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 
 
@@ -63,11 +66,23 @@ public class BookingActivity extends AppCompatActivity {
         final long nextMonth = cal.getTimeInMillis();  // for setMaxDate() on calendar
 
 
+        //  ********** GET CURRENT MONTH **********
+        // * current month is obtained when user signs in should user go directly to 'My Appointments' without first choosing a calendar date
+        Date date = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("MM");
+        String thisMonth = dateFormat.format(date);
+        System.out.println("thisMonth = " + thisMonth);
+        getMonth(thisMonth);
+
+
+
+
         //  ********** GREET USER **********
         final TextView userMsgArea = (TextView) findViewById(R.id.tvChosenDate);
         name = getIntent().getStringExtra("name");
         String greeting = "Hello, " + name + "!";
         userMsgArea.setText(greeting);
+
 
         // if () // if user already booked, show their appointment and ask if they want to change or cancel
 //        welcomeMsg.setText(bookMsg);
@@ -320,8 +335,43 @@ public class BookingActivity extends AppCompatActivity {
             }  // end OnItemClickListener()
         );  // end setOnItemClickListener()
 
-    }  // end onCreate()
+    }  // END onCreate()
 
+
+
+
+    public void getMonth(String thisMonth) {
+        System.out.println("in getMonth(), thisMonth = " + thisMonth);
+        switch (thisMonth) {
+            case "01":  chosenMonth = "january";
+                break;
+            case "02":  chosenMonth = "february";
+                break;
+            case "03":  chosenMonth = "march";
+                break;
+            case "04":  chosenMonth = "april";
+                break;
+            case "05":  chosenMonth = "may";
+                break;
+            case "06":  chosenMonth = "june";
+                break;
+            case "07":  chosenMonth = "july";
+                break;
+            case "08":  chosenMonth = "august";
+                break;
+            case "09":  chosenMonth = "september";
+                break;
+            case "10": chosenMonth = "october";
+                break;
+            case "11": chosenMonth = "november";
+                break;
+            case "12": chosenMonth = "december";
+                break;
+        };
+    }
+
+
+    //  ********** TOOLBAR (MENU) **********
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -480,8 +530,11 @@ public class BookingActivity extends AppCompatActivity {
         schdlTimesAdptr.notifyDataSetChanged();
     }
 
+
+    //  ********** CRASHLYTICS **********
 //    public void forceCrash(View view) {
 //        throw new RuntimeException("This is a crash");
 //    }
+
 
 }
