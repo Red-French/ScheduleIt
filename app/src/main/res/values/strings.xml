@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">ScheduleIt</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_my_appointments">MyAppointmentsActivity</string>
+    <string name="title_activity_my_appointments">My Appointments</string>
 </resources>
