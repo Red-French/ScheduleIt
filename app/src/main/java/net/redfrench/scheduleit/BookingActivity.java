@@ -45,6 +45,7 @@ public class BookingActivity extends AppCompatActivity {
     String chosenMonth;
     String chosenDay;
     String chosenTime;
+    String nextMonth;
 
     public ArrayList<String> schedule = new ArrayList<>();
 
@@ -94,6 +95,8 @@ public class BookingActivity extends AppCompatActivity {
         calendar = (CalendarView) findViewById(R.id.calendar);
         calendar.setMinDate(currentTime);
         calendar.setMaxDate(nextMonth);
+
+//        String monthInView = (LString) findViewById(R.id.);
 
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
@@ -231,62 +234,43 @@ public class BookingActivity extends AppCompatActivity {
                     chosenTime = "";
 
                     switch(timeIndexClicked) {
-                        case 0:
-                            chosenTime = "8:00";
+                        case 0: chosenTime = "8:00";
                             break;
-                        case 1:
-                            chosenTime = "8:30";
+                        case 1: chosenTime = "8:30";
                             break;
-                        case 2:
-                            chosenTime = "9:00";
+                        case 2: chosenTime = "9:00";
                             break;
-                        case 3:
-                            chosenTime = "9:30";
+                        case 3: chosenTime = "9:30";
                             break;
-                        case 4:
-                            chosenTime = "10:00";
+                        case 4: chosenTime = "10:00";
                             break;
-                        case 5:
-                            chosenTime = "10:30";
+                        case 5: chosenTime = "10:30";
                             break;
-                        case 6:
-                            chosenTime = "11:00";
+                        case 6: chosenTime = "11:00";
                             break;
-                        case 7:
-                            chosenTime = "11:30";
+                        case 7: chosenTime = "11:30";
                             break;
-                        case 8:
-                            chosenTime = "12:00";
+                        case 8: chosenTime = "12:00";
                             break;
-                        case 9:
-                            chosenTime = "12:30";
+                        case 9: chosenTime = "12:30";
                             break;
-                        case 10:
-                            chosenTime = "1:00";
+                        case 10: chosenTime = "1:00";
                             break;
-                        case 11:
-                            chosenTime = "1:30";
+                        case 11: chosenTime = "1:30";
                             break;
-                        case 12:
-                            chosenTime = "2:00";
+                        case 12: chosenTime = "2:00";
                             break;
-                        case 13:
-                            chosenTime = "2:30";
+                        case 13: chosenTime = "2:30";
                             break;
-                        case 14:
-                            chosenTime = "3:00";
+                        case 14: chosenTime = "3:00";
                             break;
-                        case 15:
-                            chosenTime = "3:30";
+                        case 15: chosenTime = "3:30";
                             break;
-                        case 16:
-                            chosenTime = "4:00";
+                        case 16: chosenTime = "4:00";
                             break;
-                        case 17:
-                            chosenTime = "4:30";
+                        case 17: chosenTime = "4:30";
                             break;
-                        case 18:
-                            chosenTime = "5:00";
+                        case 18: chosenTime = "5:00";
                             break;
                     };
 
@@ -344,28 +328,40 @@ public class BookingActivity extends AppCompatActivity {
         System.out.println("in getMonth(), thisMonth = " + thisMonth);
         switch (thisMonth) {
             case "01":  chosenMonth = "january";
+                        nextMonth = "february";
                 break;
             case "02":  chosenMonth = "february";
+                        nextMonth = "march";
                 break;
             case "03":  chosenMonth = "march";
+                        nextMonth = "april";
                 break;
             case "04":  chosenMonth = "april";
+                        nextMonth = "may";
                 break;
             case "05":  chosenMonth = "may";
+                        nextMonth = "june";
                 break;
             case "06":  chosenMonth = "june";
+                        nextMonth = "july";
                 break;
             case "07":  chosenMonth = "july";
+                        nextMonth = "august";
                 break;
             case "08":  chosenMonth = "august";
+                        nextMonth = "september";
                 break;
             case "09":  chosenMonth = "september";
+                        nextMonth = "october";
                 break;
             case "10": chosenMonth = "october";
+                       nextMonth = "november";
                 break;
             case "11": chosenMonth = "november";
+                       nextMonth = "december";
                 break;
             case "12": chosenMonth = "december";
+                       nextMonth = "january";
                 break;
         };
     }
@@ -391,6 +387,7 @@ public class BookingActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MyAppointmentsActivity.class);
             intent.putExtra("name", name);
             intent.putExtra("chosenMonth", chosenMonth);
+            intent.putExtra("nextMonth", nextMonth);
 
             startActivity(intent);
         }
