@@ -28,6 +28,7 @@ import java.util.Iterator;
 public class MyAppointmentsActivity extends AppCompatActivity {
     String name;
     String chosenMonth;
+    String nextMonth;
     ArrayAdapter<String> patientApmtsAdptr;
 
     public ArrayList<String> patientApmts = new ArrayList<>();
@@ -42,8 +43,10 @@ public class MyAppointmentsActivity extends AppCompatActivity {
 
         name = getIntent().getStringExtra("name");
         chosenMonth = getIntent().getStringExtra("chosenMonth");
+        nextMonth = getIntent().getStringExtra("nextMonth");
         System.out.println("name in MyAppointments is " + name);
         System.out.println("chosenMonth in MyAppointments is " + chosenMonth);
+        System.out.println("nextMonth in MyAppointments is " + nextMonth);
         final Calendar cal = Calendar.getInstance();
         System.out.println("day of month =  " + cal.get(Calendar.DAY_OF_MONTH));
 
@@ -120,6 +123,13 @@ public class MyAppointmentsActivity extends AppCompatActivity {
         System.out.println("Back from My AppointmentsRequest" + myAppointmentsRequest);
         Log.v("scheduleRequest", String.valueOf(myAppointmentsRequest));
         queue.add(myAppointmentsRequest);
+
+        MyAppointmentsRequest myAppointmentsRequestNextMonth = new MyAppointmentsRequest(name, nextMonth, responseListener);
+        RequestQueue queue2 = Volley.newRequestQueue(MyAppointmentsActivity.this);
+        System.out.println("Back from My AppointmentsRequest" + myAppointmentsRequestNextMonth);
+        Log.v("scheduleRequest", String.valueOf(myAppointmentsRequestNextMonth));
+        queue2.add(myAppointmentsRequestNextMonth);
+
     }
 
     public void parseSchedule(JSONArray daysSchedule) {
@@ -152,8 +162,9 @@ public class MyAppointmentsActivity extends AppCompatActivity {
 
     public void loadPatientAppointments() {
         chosenMonth = chosenMonth.toUpperCase();
+        nextMonth = nextMonth.toUpperCase();
         TextView monthHeading = (TextView) findViewById(R.id.tvMonthHeading);
-        monthHeading.setText(chosenMonth);
+        monthHeading.setText(chosenMonth + "/" + nextMonth);
 
         patientApmtsAdptr = new ArrayAdapter<>(this, R.layout.item, R.id.apmtTimeSlotsView, patientApmts);  // patientApmts is ArrayList
         final ListView apmtTimesView = (ListView) findViewById(R.id.patientApmtView);
