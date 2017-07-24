@@ -13,11 +13,11 @@
                 android:title="My Appointments"
                 android:orderInCategory="1"
                 app:showAsAction="never"/>
-            <item
-                android:id="@+id/balance"
-                android:title="Balance"
-                android:orderInCategory="2"
-                app:showAsAction="never"/>
+            <!--<item-->
+                <!--android:id="@+id/balance"-->
+                <!--android:title="Balance"-->
+                <!--android:orderInCategory="2"-->
+                <!--app:showAsAction="never"/>-->
         </menu>
     </item>
 
