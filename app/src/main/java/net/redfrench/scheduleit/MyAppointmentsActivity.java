@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,11 +23,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 
 public class MyAppointmentsActivity extends AppCompatActivity {
+    ArrayAdapter<String> patientApmtAdptr;
     String name;
     String chosenMonth;
     String nextMonth;
@@ -38,8 +42,8 @@ public class MyAppointmentsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_appointments);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
         name = getIntent().getStringExtra("name");
         chosenMonth = getIntent().getStringExtra("chosenMonth");
@@ -60,6 +64,24 @@ public class MyAppointmentsActivity extends AppCompatActivity {
 //                        .setAction("Action", null).show();
 //            }
 //        });
+
+
+
+
+        // set click listener on patient appointments for cancellation functionality
+//        patientApmtsAdptr = new ArrayAdapter<>(this, R.layout.item, R.id.apmtTimeSlotsView, patientApmts);  // patientApmts is ArrayList
+//        ListView apmtTimesView = (ListView) findViewById(R.id.patientApmtView1);
+//        apmtTimesView.setAdapter(patientApmtsAdptr);
+//        patientApmtsAdptr.notifyDataSetChanged();
+//
+//        patientApmtsAdptr.setOnItemClickListener(
+//                new AdapterView.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//
+//                    }
+//                });
     }
 
     @Override
@@ -118,11 +140,11 @@ public class MyAppointmentsActivity extends AppCompatActivity {
             }
         };
 
-        MyAppointmentsRequest myAppointmentsRequest = new MyAppointmentsRequest(name, chosenMonth, responseListener);
+        MyAppointmentsRequest myAppointmentsRequestCurrentMonth = new MyAppointmentsRequest(name, chosenMonth, responseListener);
         RequestQueue queue = Volley.newRequestQueue(MyAppointmentsActivity.this);
-        System.out.println("Back from My AppointmentsRequest" + myAppointmentsRequest);
-        Log.v("scheduleRequest", String.valueOf(myAppointmentsRequest));
-        queue.add(myAppointmentsRequest);
+        System.out.println("Back from My AppointmentsRequest" + myAppointmentsRequestCurrentMonth);
+        Log.v("scheduleRequest", String.valueOf(myAppointmentsRequestCurrentMonth));
+        queue.add(myAppointmentsRequestCurrentMonth);
 
         MyAppointmentsRequest myAppointmentsRequestNextMonth = new MyAppointmentsRequest(name, nextMonth, responseListener);
         RequestQueue queue2 = Volley.newRequestQueue(MyAppointmentsActivity.this);
@@ -133,6 +155,8 @@ public class MyAppointmentsActivity extends AppCompatActivity {
     }
 
     public void parseSchedule(JSONArray daysSchedule) {
+        String thisTime = "";
+        String dateDay;
         System.out.println("daysSchedule = " + daysSchedule);
 
         for (int i = 0; i < daysSchedule.length(); i++) {
@@ -144,9 +168,82 @@ public class MyAppointmentsActivity extends AppCompatActivity {
                     String key = keys.next();
                     String thisSchdlName = theSchdl.get(key).toString();
 
+                    if(key.equals("time")) {
+                        thisTime = theSchdl.get(key) + ":  ";;
+                    }
+
                     if(thisSchdlName.equals(name)) {
-                        System.out.println("Time: " + key + " - " + theSchdl.get(key));
-                        String thisAppointment = "Time: " + key + " - " + theSchdl.get(key);
+
+
+                        switch(key) {
+                            case "one": dateDay = "1st";
+                                break;
+                            case "two": dateDay = "2nd";
+                                break;
+                            case "three": dateDay = "3rd";
+                                break;
+                            case "four": dateDay = "4th";
+                                break;
+                            case "five": dateDay = "5th";
+                                break;
+                            case "six": dateDay = "6th";
+                                break;
+                            case "seven": dateDay = "7th";
+                                break;
+                            case "eight": dateDay = "8th";
+                                break;
+                            case "nine": dateDay = "9th";
+                                break;
+                            case "ten": dateDay = "10th";
+                                break;
+                            case "eleven": dateDay = "11th";
+                                break;
+                            case "twelve": dateDay = "12th";
+                                break;
+                            case "thirteen": dateDay = "13th";
+                                break;
+                            case "fourteen": dateDay = "14th";
+                                break;
+                            case "fifteen": dateDay = "15th";
+                                break;
+                            case "sixteen": dateDay = "16th";
+                                break;
+                            case "seventeen": dateDay = "17th";
+                                break;
+                            case "eighteen": dateDay = "18th";
+                                break;
+                            case "nineteen": dateDay = "19th";
+                                break;
+                            case "twenty": dateDay = "20th";
+                                break;
+                            case "twentyone": dateDay = "21st";
+                                break;
+                            case "twentytwo": dateDay = "22nd";
+                                break;
+                            case "twentythree": dateDay = "23rd";
+                                break;
+                            case "twentyfour": dateDay = "24th";
+                                break;
+                            case "twentyfive": dateDay = "25th";
+                                break;
+                            case "twentysix": dateDay = "26th";
+                                break;
+                            case "twentyseven": dateDay = "27th";
+                                break;
+                            case "twentyeight": dateDay = "28th";
+                                break;
+                            case "twentynine": dateDay = "29th";
+                                break;
+                            case "thirty": dateDay = "30th";
+                                break;
+                            case "thirtyone": dateDay = "31st";
+                                break;
+                            default:
+                                dateDay = "00";
+                        };
+
+                        System.out.println(key + " " + thisTime +  theSchdl.get(key));
+                        String thisAppointment = dateDay + " at " + thisTime +  theSchdl.get(key);
 
                         patientApmts.add(thisAppointment);
                     }
@@ -163,12 +260,22 @@ public class MyAppointmentsActivity extends AppCompatActivity {
     public void loadPatientAppointments() {
         chosenMonth = chosenMonth.toUpperCase();
         nextMonth = nextMonth.toUpperCase();
-        TextView monthHeading = (TextView) findViewById(R.id.tvMonthHeading);
-        monthHeading.setText(chosenMonth + "/" + nextMonth);
+        TextView dualMonthHeading = (TextView) findViewById(R.id.tvDualMonthHeading);
+        dualMonthHeading.setText(chosenMonth + "/" + nextMonth);
+
+        TextView currentMonthHeading = (TextView) findViewById(R.id.tvCurrentMonthHeading);
+        currentMonthHeading.setText(chosenMonth);
+
+        TextView nextMonthHeading = (TextView) findViewById(R.id.tvNextMonthHeading);
+        nextMonthHeading.setText(nextMonth);
 
         patientApmtsAdptr = new ArrayAdapter<>(this, R.layout.item, R.id.apmtTimeSlotsView, patientApmts);  // patientApmts is ArrayList
-        final ListView apmtTimesView = (ListView) findViewById(R.id.patientApmtView);
+        ListView apmtTimesView = (ListView) findViewById(R.id.patientApmtView1);
         apmtTimesView.setAdapter(patientApmtsAdptr);
+        patientApmtsAdptr.notifyDataSetChanged();
+
+        ListView apmtTimesView2 = (ListView) findViewById(R.id.patientApmtView2);
+        apmtTimesView2.setAdapter(patientApmtsAdptr);
         patientApmtsAdptr.notifyDataSetChanged();
     }
 
@@ -194,5 +301,7 @@ public class MyAppointmentsActivity extends AppCompatActivity {
 //            }
 //        }
     }
+
+
 
 }
