@@ -34,6 +34,7 @@ public class MyAppointmentsActivity extends AppCompatActivity {
     String chosenMonth;
     String nextMonth;
     ArrayAdapter<String> patientApmtsAdptr;
+    ArrayAdapter<String> patientApmtsAdptr2;
 
     public ArrayList<String> patientApmts = new ArrayList<>();
 
@@ -46,7 +47,7 @@ public class MyAppointmentsActivity extends AppCompatActivity {
 //        setSupportActionBar(toolbar);
 
         name = getIntent().getStringExtra("name");
-        chosenMonth = getIntent().getStringExtra("chosenMonth");
+        chosenMonth = getIntent().getStringExtra("thisMonth");
         nextMonth = getIntent().getStringExtra("nextMonth");
         System.out.println("name in MyAppointments is " + name);
         System.out.println("chosenMonth in MyAppointments is " + chosenMonth);
@@ -54,7 +55,8 @@ public class MyAppointmentsActivity extends AppCompatActivity {
         final Calendar cal = Calendar.getInstance();
         System.out.println("day of month =  " + cal.get(Calendar.DAY_OF_MONTH));
 
-        requestPatientSchedule();
+        requestThisMonthPatientSchedule();
+        requestNextMonthPatientSchedule();
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -114,7 +116,7 @@ public class MyAppointmentsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void requestPatientSchedule() {
+    public void requestThisMonthPatientSchedule() {
         Response.Listener<String> responseListener = new Response.Listener<String>() {
 
             // below happens inside PatientAppointments.php when the response has been executed
@@ -125,6 +127,7 @@ public class MyAppointmentsActivity extends AppCompatActivity {
                     JSONArray results = new JSONArray(response);
                     System.out.println("results are " + results);
                     parseSchedule(results);
+                    loadPatientAppointments("thisMonth");
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -146,6 +149,35 @@ public class MyAppointmentsActivity extends AppCompatActivity {
         Log.v("scheduleRequest", String.valueOf(myAppointmentsRequestCurrentMonth));
         queue.add(myAppointmentsRequestCurrentMonth);
 
+    }
+
+    public void requestNextMonthPatientSchedule() {
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+
+            // below happens inside PatientAppointments.php when the response has been executed
+            @Override
+            public void onResponse(String response) {  // 'response' is the boolean response from GetSchedule.php (volley provides this response)
+
+                try {
+                    JSONArray results = new JSONArray(response);
+                    System.out.println("results are " + results);
+                    parseSchedule(results);
+                    loadPatientAppointments("nextMonth");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MyAppointmentsActivity.this);
+                    builder.setMessage("Schedule retrieval failed")
+                            .setNegativeButton("Retry", null)
+                            .create()
+                            .show();
+
+//                    bookingActivity.schedule.clear();
+//                    bookingActivity.loadSchedule();  // load blank schedule
+                }
+            }
+        };
+
         MyAppointmentsRequest myAppointmentsRequestNextMonth = new MyAppointmentsRequest(name, nextMonth, responseListener);
         RequestQueue queue2 = Volley.newRequestQueue(MyAppointmentsActivity.this);
         System.out.println("Back from My AppointmentsRequest" + myAppointmentsRequestNextMonth);
@@ -157,6 +189,7 @@ public class MyAppointmentsActivity extends AppCompatActivity {
     public void parseSchedule(JSONArray daysSchedule) {
         String thisTime = "";
         String dateDay;
+        patientApmts.clear();
         System.out.println("daysSchedule = " + daysSchedule);
 
         for (int i = 0; i < daysSchedule.length(); i++) {
@@ -249,7 +282,7 @@ public class MyAppointmentsActivity extends AppCompatActivity {
                     }
                 }
 
-                loadPatientAppointments();
+//                loadPatientAppointments();
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -257,7 +290,7 @@ public class MyAppointmentsActivity extends AppCompatActivity {
         }
     }
 
-    public void loadPatientAppointments() {
+    public void loadPatientAppointments(String month) {
         chosenMonth = chosenMonth.toUpperCase();
         nextMonth = nextMonth.toUpperCase();
         TextView dualMonthHeading = (TextView) findViewById(R.id.tvDualMonthHeading);
@@ -269,14 +302,23 @@ public class MyAppointmentsActivity extends AppCompatActivity {
         TextView nextMonthHeading = (TextView) findViewById(R.id.tvNextMonthHeading);
         nextMonthHeading.setText(nextMonth);
 
-        patientApmtsAdptr = new ArrayAdapter<>(this, R.layout.item, R.id.apmtTimeSlotsView, patientApmts);  // patientApmts is ArrayList
-        ListView apmtTimesView = (ListView) findViewById(R.id.patientApmtView1);
-        apmtTimesView.setAdapter(patientApmtsAdptr);
-        patientApmtsAdptr.notifyDataSetChanged();
 
-        ListView apmtTimesView2 = (ListView) findViewById(R.id.patientApmtView2);
-        apmtTimesView2.setAdapter(patientApmtsAdptr);
-        patientApmtsAdptr.notifyDataSetChanged();
+
+        if(month.equals("thisMonth")) {
+            patientApmtsAdptr = new ArrayAdapter<>(this, R.layout.item, R.id.apmtTimeSlotsView, patientApmts);  // patientApmts is ArrayList
+
+            ListView apmtTimesView = (ListView) findViewById(R.id.patientApmtView1);
+            apmtTimesView.setAdapter(patientApmtsAdptr);
+            patientApmtsAdptr.notifyDataSetChanged();
+
+        } else {
+            patientApmtsAdptr2 = new ArrayAdapter<>(this, R.layout.item, R.id.apmtTimeSlotsView, patientApmts);  // patientApmts is ArrayList
+
+            ListView apmtTimesView2 = (ListView) findViewById(R.id.patientApmtView2);
+            apmtTimesView2.setAdapter(patientApmtsAdptr2);
+            patientApmtsAdptr2.notifyDataSetChanged();
+        }
+
     }
 
 
