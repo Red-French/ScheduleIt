@@ -42,6 +42,7 @@ public class BookingActivity extends AppCompatActivity {
 
     String name;
     public String appointmentDate;
+    String currentMonth;
     String chosenMonth;
     String chosenDay;
     String chosenTime;
@@ -327,40 +328,40 @@ public class BookingActivity extends AppCompatActivity {
     public void getMonth(String thisMonth) {
         System.out.println("in getMonth(), thisMonth = " + thisMonth);
         switch (thisMonth) {
-            case "01":  chosenMonth = "january";
+            case "01":  currentMonth = "january";
                         nextMonth = "february";
                 break;
-            case "02":  chosenMonth = "february";
+            case "02":  currentMonth = "february";
                         nextMonth = "march";
                 break;
-            case "03":  chosenMonth = "march";
+            case "03":  currentMonth = "march";
                         nextMonth = "april";
                 break;
-            case "04":  chosenMonth = "april";
+            case "04":  currentMonth = "april";
                         nextMonth = "may";
                 break;
-            case "05":  chosenMonth = "may";
+            case "05":  currentMonth = "may";
                         nextMonth = "june";
                 break;
-            case "06":  chosenMonth = "june";
+            case "06":  currentMonth = "june";
                         nextMonth = "july";
                 break;
-            case "07":  chosenMonth = "july";
+            case "07":  currentMonth = "july";
                         nextMonth = "august";
                 break;
-            case "08":  chosenMonth = "august";
+            case "08":  currentMonth = "august";
                         nextMonth = "september";
                 break;
-            case "09":  chosenMonth = "september";
+            case "09":  currentMonth = "september";
                         nextMonth = "october";
                 break;
-            case "10": chosenMonth = "october";
+            case "10": currentMonth = "october";
                        nextMonth = "november";
                 break;
-            case "11": chosenMonth = "november";
+            case "11": currentMonth = "november";
                        nextMonth = "december";
                 break;
-            case "12": chosenMonth = "december";
+            case "12": currentMonth = "december";
                        nextMonth = "january";
                 break;
         };
@@ -386,7 +387,7 @@ public class BookingActivity extends AppCompatActivity {
         if (id == R.id.myAppointments) {
             Intent intent = new Intent(this, MyAppointmentsActivity.class);
             intent.putExtra("name", name);
-            intent.putExtra("chosenMonth", chosenMonth);
+            intent.putExtra("thisMonth", currentMonth);
             intent.putExtra("nextMonth", nextMonth);
 
             startActivity(intent);
