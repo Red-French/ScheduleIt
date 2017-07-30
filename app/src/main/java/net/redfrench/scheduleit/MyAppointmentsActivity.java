@@ -30,7 +30,7 @@ import java.util.Iterator;
 
 public class MyAppointmentsActivity extends AppCompatActivity {
     ArrayAdapter<String> patientApmtAdptr;
-    String name;
+    String usersName;
     String chosenMonth;
     String nextMonth;
     ArrayAdapter<String> patientApmtsAdptr;
@@ -46,10 +46,10 @@ public class MyAppointmentsActivity extends AppCompatActivity {
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 
-        name = getIntent().getStringExtra("name");
+        usersName = getIntent().getStringExtra("name");
         chosenMonth = getIntent().getStringExtra("thisMonth");
         nextMonth = getIntent().getStringExtra("nextMonth");
-        System.out.println("name in MyAppointments is " + name);
+        System.out.println("name in MyAppointments is " + usersName);
         System.out.println("chosenMonth in MyAppointments is " + chosenMonth);
         System.out.println("nextMonth in MyAppointments is " + nextMonth);
         final Calendar cal = Calendar.getInstance();
@@ -103,7 +103,7 @@ public class MyAppointmentsActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.myAppointments) {
             Intent intent = new Intent(this, MyAppointmentsActivity.class);
-            intent.putExtra("name", name);
+            intent.putExtra("name", usersName);
             intent.putExtra("chosenMonth", chosenMonth);
 
             startActivity(intent);
@@ -143,7 +143,7 @@ public class MyAppointmentsActivity extends AppCompatActivity {
             }
         };
 
-        MyAppointmentsRequest myAppointmentsRequestCurrentMonth = new MyAppointmentsRequest(name, chosenMonth, responseListener);
+        MyAppointmentsRequest myAppointmentsRequestCurrentMonth = new MyAppointmentsRequest(usersName, chosenMonth, responseListener);
         RequestQueue queue = Volley.newRequestQueue(MyAppointmentsActivity.this);
         System.out.println("Back from My AppointmentsRequest" + myAppointmentsRequestCurrentMonth);
         Log.v("scheduleRequest", String.valueOf(myAppointmentsRequestCurrentMonth));
@@ -178,7 +178,7 @@ public class MyAppointmentsActivity extends AppCompatActivity {
             }
         };
 
-        MyAppointmentsRequest myAppointmentsRequestNextMonth = new MyAppointmentsRequest(name, nextMonth, responseListener);
+        MyAppointmentsRequest myAppointmentsRequestNextMonth = new MyAppointmentsRequest(usersName, nextMonth, responseListener);
         RequestQueue queue2 = Volley.newRequestQueue(MyAppointmentsActivity.this);
         System.out.println("Back from My AppointmentsRequest" + myAppointmentsRequestNextMonth);
         Log.v("scheduleRequest", String.valueOf(myAppointmentsRequestNextMonth));
@@ -195,17 +195,18 @@ public class MyAppointmentsActivity extends AppCompatActivity {
         for (int i = 0; i < daysSchedule.length(); i++) {
             try {
                 JSONObject theSchdl = daysSchedule.getJSONObject(i);
-                Iterator<String> keys = theSchdl.keys();
+                Iterator<String> keys = theSchdl.keys();  // keys are the column names
 
                 while (keys.hasNext()) {
                     String key = keys.next();
-                    String thisSchdlName = theSchdl.get(key).toString();
+                    String patientName = theSchdl.get(key).toString();
+                    System.out.println("thisSchdlName = " + patientName);
 
                     if(key.equals("time")) {
                         thisTime = theSchdl.get(key) + ":  ";;
                     }
 
-                    if(thisSchdlName.equals(name)) {
+                    if(patientName.equals(usersName)) {
 
 
                         switch(key) {
@@ -275,7 +276,7 @@ public class MyAppointmentsActivity extends AppCompatActivity {
                                 dateDay = "00";
                         };
 
-                        System.out.println(key + " " + thisTime +  theSchdl.get(key));
+                        System.out.println(key + " " + dateDay + " at " + thisTime +  theSchdl.get(key));
                         String thisAppointment = dateDay + " at " + thisTime +  theSchdl.get(key);
 
                         patientApmts.add(thisAppointment);
