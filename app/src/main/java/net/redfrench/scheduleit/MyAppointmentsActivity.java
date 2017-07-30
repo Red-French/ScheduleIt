@@ -4,13 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,13 +20,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 
 public class MyAppointmentsActivity extends AppCompatActivity {
-    ArrayAdapter<String> patientApmtAdptr;
+
     String usersName;
     String chosenMonth;
     String nextMonth;
@@ -294,6 +290,7 @@ public class MyAppointmentsActivity extends AppCompatActivity {
     public void loadPatientAppointments(String month) {
         chosenMonth = chosenMonth.toUpperCase();
         nextMonth = nextMonth.toUpperCase();
+
         TextView dualMonthHeading = (TextView) findViewById(R.id.tvDualMonthHeading);
         dualMonthHeading.setText(chosenMonth + "/" + nextMonth);
 
@@ -306,14 +303,14 @@ public class MyAppointmentsActivity extends AppCompatActivity {
 
 
         if(month.equals("thisMonth")) {
-            patientApmtsAdptr = new ArrayAdapter<>(this, R.layout.item, R.id.apmtTimeSlotsView, patientApmts);  // patientApmts is ArrayList
+            patientApmtsAdptr = new ArrayAdapter<>(this, R.layout.item_apmt, R.id.tvPatientApmtsView, patientApmts);  // patientApmts is ArrayList
 
             ListView apmtTimesView = (ListView) findViewById(R.id.patientApmtView1);
             apmtTimesView.setAdapter(patientApmtsAdptr);
             patientApmtsAdptr.notifyDataSetChanged();
 
         } else {
-            patientApmtsAdptr2 = new ArrayAdapter<>(this, R.layout.item, R.id.apmtTimeSlotsView, patientApmts);  // patientApmts is ArrayList
+            patientApmtsAdptr2 = new ArrayAdapter<>(this, R.layout.item_apmt, R.id.tvPatientApmtsView, patientApmts);  // patientApmts is ArrayList
 
             ListView apmtTimesView2 = (ListView) findViewById(R.id.patientApmtView2);
             apmtTimesView2.setAdapter(patientApmtsAdptr2);
