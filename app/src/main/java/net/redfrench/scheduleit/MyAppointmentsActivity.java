@@ -5,10 +5,14 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -63,24 +67,8 @@ public class MyAppointmentsActivity extends AppCompatActivity {
 //            }
 //        });
 
+    }  // END onCreate()
 
-
-
-        // set click listener on patient appointments for cancellation functionality
-//        patientApmtsAdptr = new ArrayAdapter<>(this, R.layout.item, R.id.apmtTimeSlotsView, patientApmts);  // patientApmts is ArrayList
-//        ListView apmtTimesView = (ListView) findViewById(R.id.patientApmtView1);
-//        apmtTimesView.setAdapter(patientApmtsAdptr);
-//        patientApmtsAdptr.notifyDataSetChanged();
-//
-//        patientApmtsAdptr.setOnItemClickListener(
-//                new AdapterView.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//
-//                    }
-//                });
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -111,6 +99,8 @@ public class MyAppointmentsActivity extends AppCompatActivity {
 //
         return super.onOptionsItemSelected(item);
     }
+
+
 
     public void requestThisMonthPatientSchedule() {
         Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -320,8 +310,9 @@ public class MyAppointmentsActivity extends AppCompatActivity {
     }
 
 
-    public void cancel(JSONObject daysSchedule) {
-        System.out.println("INSIDE CANCEL!!!!" + daysSchedule);
+    public void cancel(View v) {
+        System.out.println("INSIDE CANCEL!!!!");
+
 //        for (int i = 0; i < daysSchedule.length(); i++) {
 //            try {
 //                JSONObject theSchdl = daysSchedule.getJSONObject(i);
