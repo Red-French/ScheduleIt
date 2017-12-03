@@ -17,7 +17,6 @@ repositories {
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "net.redfrench.scheduleit"
         minSdkVersion 16
